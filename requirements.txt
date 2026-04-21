@@ -1,0 +1,7 @@
+pandas
+sentence-transformers
+numpy
+fastapi
+uvicorn
+python-dotenv
+qdrant-client>=1.9.1

@@ -1,0 +1,1430 @@
+[
+  {
+    "request_text": "Проверь, что значение order_id задано, иначе верни строку 'unknown'",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"order_id\": null\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.order_id or \"unknown\"",
+    "request_algorithm": "1. Read the value at wf.vars.order_id.\n2. Check whether the source value is present and truthy.\n3. If it is present, return it unchanged.\n4. Otherwise return the literal fallback string 'unknown'."
+  },
+  {
+    "request_text": "Проверь тип значения user_age",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"user_age\": 25\n    }\n  }\n}",
+    "request_answer_example": "return type(wf.vars.user_age)",
+    "request_algorithm": "1. Read the value at wf.vars.user_age.\n2. Determine the Lua type of that value.\n3. Return the detected type as the result."
+  },
+  {
+    "request_text": "Преобразуй строку quantity в число",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"quantity\": \"42\"\n    }\n  }\n}",
+    "request_answer_example": "return tonumber(wf.vars.quantity)",
+    "request_algorithm": "1. Read the string value at wf.vars.quantity.\n2. Convert that string to a numeric value with Lua number conversion.\n3. Return the converted number."
+  },
+  {
+    "request_text": "Преобразуй число total_price в строку",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"total_price\": 1999.5\n    }\n  }\n}",
+    "request_answer_example": "return tostring(wf.vars.total_price)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.total_price.\n2. Convert that number to its string representation.\n3. Return the resulting string."
+  },
+  {
+    "request_text": "Проверь, является ли значение is_active булевым",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"is_active\": true\n    }\n  }\n}",
+    "request_answer_example": "return type(wf.vars.is_active) == \"boolean\"",
+    "request_algorithm": "1. Read the value at wf.vars.is_active.\n2. Determine the Lua type of that value.\n3. Compare the detected type with the literal boolean type.\n4. Return true when the value is boolean; otherwise return false."
+  },
+  {
+    "request_text": "Верни true, если email не пустой и не nil",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"email\": \"user@example.com\"\n    }\n  }\n}",
+    "request_answer_example": "local email = wf.vars.email\nreturn email ~= nil and email ~= \"\"",
+    "request_algorithm": "1. Read the value at wf.vars.email.\n2. Check that the value is not nil.\n3. Check that the value is not an empty string.\n4. Return true only when both conditions are satisfied; otherwise return false."
+  },
+  {
+    "request_text": "Создай таблицу профиля пользователя из отдельных полей",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"first_name\": \"Ivan\",\n      \"last_name\": \"Petrov\",\n      \"age\": 22\n    }\n  }\n}",
+    "request_answer_example": "return {\n  firstName = wf.vars.first_name,\n  lastName = wf.vars.last_name,\n  age = wf.vars.age\n}",
+    "request_algorithm": "1. Read the value at wf.vars.first_name.\n2. Read the value at wf.vars.last_name.\n3. Read the value at wf.vars.age.\n4. Create a new result table with the required target fields.\n5. Assign each target field from the corresponding source value.\n6. Return the constructed table."
+  },
+  {
+    "request_text": "Получи поле city из вложенной таблицы address",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"address\": {\n        \"city\": \"Moscow\",\n        \"street\": \"Tverskaya\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.address.city",
+    "request_algorithm": "1. Read the source structure at wf.vars.address.\n2. Extract the requested value from wf.vars.address.city.\n3. Return that value."
+  },
+  {
+    "request_text": "Безопасно получи zipCode из address, если address может отсутствовать",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"address\": null\n    }\n  }\n}",
+    "request_answer_example": "if wf.vars.address then\n  return wf.vars.address.zipCode\nend\nreturn nil",
+    "request_algorithm": "1. Read the value at wf.vars.address.\n2. Check whether the parent object exists.\n3. If the parent object exists, read the nested value at wf.vars.address.zipCode.\n4. Return the nested value when available.\n5. If the parent object is missing, return nil."
+  },
+  {
+    "request_text": "Скопируй список ролей пользователя в новый массив",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"roles\": [\"admin\", \"editor\", \"viewer\"]\n    }\n  }\n}",
+    "request_answer_example": "local src = wf.vars.roles\nlocal dst = _utils.array.new()\n\nfor i = 1, #src do\n  dst[i] = src[i]\nend\n\nreturn dst",
+    "request_algorithm": "1. Read the source array at wf.vars.roles.\n2. Create a new destination array.\n3. Iterate through the source array in index order.\n4. Copy each element into the destination array at the same position.\n5. Return the new array."
+  },
+  {
+    "request_text": "Посчитай сумму price и tax",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"price\": 100,\n      \"tax\": 20\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.price + wf.vars.tax",
+    "request_algorithm": "1. Read the first numeric value at wf.vars.price.\n2. Read the second numeric value at wf.vars.tax.\n3. Add the two numbers.\n4. Return the sum."
+  },
+  {
+    "request_text": "Посчитай остаток от деления quantity на pack_size",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"quantity\": 23,\n      \"pack_size\": 10\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.quantity % wf.vars.pack_size",
+    "request_algorithm": "1. Read the dividend at wf.vars.quantity.\n2. Read the divisor at wf.vars.pack_size.\n3. Compute the remainder with the modulo operation.\n4. Return the remainder."
+  },
+  {
+    "request_text": "Округли вниз количество страниц, которое помещается в лимит",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"total_items\": 53,\n      \"page_size\": 10\n    }\n  }\n}",
+    "request_answer_example": "return math.floor(wf.vars.total_items / wf.vars.page_size)",
+    "request_algorithm": "1. Read the total item count at wf.vars.total_items.\n2. Read the page size at wf.vars.page_size.\n3. Divide the total item count by the page size.\n4. Round the quotient down to the nearest integer.\n5. Return the rounded result."
+  },
+  {
+    "request_text": "Объедини first_name и last_name в полное имя",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"first_name\": \"Anna\",\n      \"last_name\": \"Smirnova\"\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.first_name .. \" \" .. wf.vars.last_name",
+    "request_algorithm": "1. Read the first name at wf.vars.first_name.\n2. Read the last name at wf.vars.last_name.\n3. Concatenate the two strings with a single space between them.\n4. Return the full name string."
+  },
+  {
+    "request_text": "Проверь, что сумма больше лимита и заказ активен",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"amount\": 1500,\n      \"limit\": 1000,\n      \"is_active\": true\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.amount > wf.vars.limit and wf.vars.is_active",
+    "request_algorithm": "1. Read the amount at wf.vars.amount.\n2. Read the limit at wf.vars.limit.\n3. Read the active flag at wf.vars.is_active.\n4. Check whether the amount is greater than the limit.\n5. Combine that comparison with the active flag using logical AND.\n6. Return the boolean result."
+  },
+  {
+    "request_text": "Сравни два значения без приведения типов",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"a\": 10,\n      \"b\": 10\n    }\n  }\n}",
+    "request_answer_example": "return rawequal(wf.vars.a, wf.vars.b)",
+    "request_algorithm": "1. Read the first value at wf.vars.a.\n2. Read the second value at wf.vars.b.\n3. Compare the two values with raw equality semantics.\n4. Return whether they are exactly equal."
+  },
+  {
+    "request_text": "Получи длину строки comment",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"comment\": \"Hello Lua\"\n    }\n  }\n}",
+    "request_answer_example": "return string.len(wf.vars.comment)",
+    "request_algorithm": "1. Read the string value at wf.vars.comment.\n2. Compute the length of that string.\n3. Return the resulting length."
+  },
+  {
+    "request_text": "Переведи имя пользователя в верхний регистр",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"username\": \"octapi_user\"\n    }\n  }\n}",
+    "request_answer_example": "return string.upper(wf.vars.username)",
+    "request_algorithm": "1. Read the source string at wf.vars.username.\n2. Convert the entire string to uppercase.\n3. Return the converted string."
+  },
+  {
+    "request_text": "Переведи email в нижний регистр",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"email\": \"USER@EXAMPLE.COM\"\n    }\n  }\n}",
+    "request_answer_example": "return string.lower(wf.vars.email)",
+    "request_algorithm": "1. Read the source string at wf.vars.email.\n2. Convert the entire string to lowercase.\n3. Return the converted string."
+  },
+  {
+    "request_text": "Возьми первые 4 символа SKU",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"sku\": \"ABCD-1234\"\n    }\n  }\n}",
+    "request_answer_example": "return string.sub(wf.vars.sku, 1, 4)",
+    "request_algorithm": "1. Read the source string at wf.vars.sku.\n2. Extract characters from position 1 through position 4.\n3. Return the extracted substring."
+  },
+  {
+    "request_text": "Найди позицию символа '@' в email",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"email\": \"user@example.com\"\n    }\n  }\n}",
+    "request_answer_example": "return string.find(wf.vars.email, \"@\", 1, true)",
+    "request_algorithm": "1. Read the source string at wf.vars.email.\n2. Search for the requested literal character in that string.\n3. Return the position of the first match."
+  },
+  {
+    "request_text": "Проверь, начинается ли артикул с префикса 'SKU-'",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"article\": \"SKU-10001\"\n    }\n  }\n}",
+    "request_answer_example": "return string.sub(wf.vars.article, 1, 4) == \"SKU-\"",
+    "request_algorithm": "1. Read the source string at wf.vars.article.\n2. Extract the prefix with the same length as the required literal prefix.\n3. Compare the extracted prefix with the expected prefix.\n4. Return the boolean result."
+  },
+  {
+    "request_text": "Замени все дефисы в номере телефона на пробелы",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"phone\": \"+7-900-123-45-67\"\n    }\n  }\n}",
+    "request_answer_example": "return string.gsub(wf.vars.phone, \"-\", \" \")",
+    "request_algorithm": "1. Read the source string at wf.vars.phone.\n2. Replace every hyphen character with a space.\n3. Return the transformed string."
+  },
+  {
+    "request_text": "Извлеки домен из email через pattern",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"email\": \"user@example.com\"\n    }\n  }\n}",
+    "request_answer_example": "return string.match(wf.vars.email, \"@(.+)$\")",
+    "request_algorithm": "1. Read the email string at wf.vars.email.\n2. Apply a pattern that captures everything after the @ character.\n3. Return the captured domain part."
+  },
+  {
+    "request_text": "Разбей CSV-строку tags по запятой в массив",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"tags\": \"lua,json,api,lowcode\"\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor tag in string.gmatch(wf.vars.tags, \"([^,]+)\") do\n  table.insert(result, tag)\nend\n\nreturn result",
+    "request_algorithm": "1. Read the CSV string at wf.vars.tags.\n2. Create a new result array.\n3. Iterate through the string and capture each comma-separated token.\n4. Append each token to the result array in order.\n5. Return the result array."
+  },
+  {
+    "request_text": "Собери строку приветствия через string.format",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"name\": \"Olga\",\n      \"orders\": 3\n    }\n  }\n}",
+    "request_answer_example": "return string.format(\"Пользователь %s создал %d заказа(ов)\", wf.vars.name, wf.vars.orders)",
+    "request_algorithm": "1. Read the value at wf.vars.name.\n2. Read the value at wf.vars.orders.\n3. Construct the output string with the required string.format template.\n4. Insert the source values into the template in the correct order.\n5. Return the formatted string."
+  },
+  {
+    "request_text": "Повтори символ '*' 10 раз для разделителя",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"count\": 10\n    }\n  }\n}",
+    "request_answer_example": "return string.rep(\"*\", wf.vars.count)",
+    "request_algorithm": "1. Read the repetition count at wf.vars.count.\n2. Repeat the requested literal character that many times.\n3. Return the resulting string."
+  },
+  {
+    "request_text": "Разверни строку code задом наперед",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"code\": \"ABC123\"\n    }\n  }\n}",
+    "request_answer_example": "return string.reverse(wf.vars.code)",
+    "request_algorithm": "1. Read the source string at wf.vars.code.\n2. Reverse the character order of the string.\n3. Return the reversed string."
+  },
+  {
+    "request_text": "Получи ASCII-код первого символа строки status",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"status\": \"OK\"\n    }\n  }\n}",
+    "request_answer_example": "return string.byte(wf.vars.status, 1)",
+    "request_algorithm": "1. Read the source string at wf.vars.status.\n2. Take the first character position of the string.\n3. Get the numeric character code of that first character.\n4. Return the resulting code."
+  },
+  {
+    "request_text": "Собери строку из кодов символов 79 и 75",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "return string.char(79, 75)",
+    "request_algorithm": "1. Take the provided numeric character codes in the given order.\n2. Convert those character codes to a string.\n3. Return the constructed string."
+  },
+  {
+    "request_text": "Из полученного списка email получи последний",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"emails\": [\n        \"user1@example.com\",\n        \"user2@example.com\",\n        \"user3@example.com\"\n      ]\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.emails[#wf.vars.emails]",
+    "request_algorithm": "1. Read the array at wf.vars.emails.\n2. Locate the last valid index of the array.\n3. Return the element stored at that last index."
+  },
+  {
+    "request_text": "Добавь новый email в конец массива emails",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"emails\": [\n        \"user1@example.com\",\n        \"user2@example.com\"\n      ],\n      \"new_email\": \"user3@example.com\"\n    }\n  }\n}",
+    "request_answer_example": "local result = wf.vars.emails\ntable.insert(result, wf.vars.new_email)\nreturn result",
+    "request_algorithm": "1. Read the target array at wf.vars.emails.\n2. Read the value to append at wf.vars.new_email.\n3. Insert the new value at the end of the array.\n4. Return the updated array."
+  },
+  {
+    "request_text": "Удали первый элемент массива queue",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"queue\": [\"task1\", \"task2\", \"task3\"]\n    }\n  }\n}",
+    "request_answer_example": "local result = wf.vars.queue\ntable.remove(result, 1)\nreturn result",
+    "request_algorithm": "1. Read the array at wf.vars.queue.\n2. Remove the element at index 1.\n3. Return the updated array."
+  },
+  {
+    "request_text": "Объедини массив names в одну строку через запятую",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"names\": [\"Ivan\", \"Anna\", \"Olga\"]\n    }\n  }\n}",
+    "request_answer_example": "return table.concat(wf.vars.names, \", \")",
+    "request_algorithm": "1. Read the array at wf.vars.names.\n2. Concatenate all array elements with a comma and a space separator.\n3. Return the joined string."
+  },
+  {
+    "request_text": "Отсортируй массив чисел по возрастанию",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"numbers\": [8, 3, 10, 1]\n    }\n  }\n}",
+    "request_answer_example": "local result = wf.vars.numbers\ntable.sort(result)\nreturn result",
+    "request_algorithm": "1. Read the numeric array at wf.vars.numbers.\n2. Sort the array in ascending order.\n3. Return the sorted array."
+  },
+  {
+    "request_text": "Отсортируй товары по цене по убыванию",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"products\": [\n        {\"name\": \"A\", \"price\": 300},\n        {\"name\": \"B\", \"price\": 100},\n        {\"name\": \"C\", \"price\": 200}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = wf.vars.products\n\ntable.sort(result, function(a, b)\n  return a.price > b.price\nend)\n\nreturn result",
+    "request_algorithm": "1. Read the product array at wf.vars.products.\n2. Sort the array with a comparator that places higher prices before lower prices.\n3. Keep each product object intact while reordering the array.\n4. Return the sorted array."
+  },
+  {
+    "request_text": "Перемести первые 2 элемента массива source в target начиная с позиции 1",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"source\": [\"A\", \"B\", \"C\"],\n      \"target\": [\"X\", \"Y\", \"Z\"]\n    }\n  }\n}",
+    "request_answer_example": "local target = wf.vars.target\ntable.move(wf.vars.source, 1, 2, 1, target)\nreturn target",
+    "request_algorithm": "1. Read the value at wf.vars.target.\n2. Read the value at wf.vars.source.\n3. Move the requested source slice into the target array starting at position 1.\n4. Return the updated target array."
+  },
+  {
+    "request_text": "Верни количество элементов в массиве orders",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"orders\": [101, 102, 103, 104]\n    }\n  }\n}",
+    "request_answer_example": "return #wf.vars.orders",
+    "request_algorithm": "1. Read the array at wf.vars.orders.\n2. Compute its length.\n3. Return the element count."
+  },
+  {
+    "request_text": "Преобразуй одиночный объект item в массив, если это не массив",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"item\": {\n        \"sku\": \"A001\",\n        \"qty\": 2\n      }\n    }\n  }\n}",
+    "request_answer_example": "local item = wf.vars.item\n\nif type(item) ~= \"table\" then\n  return { item }\nend\n\nlocal isArray = true\nfor k, _ in pairs(item) do\n  if type(k) ~= \"number\" then\n    isArray = false\n    break\n  end\nend\n\nif isArray then\n  return item\nend\n\nreturn { item }",
+    "request_algorithm": "1. Read the value at wf.vars.item.\n2. If the value is not a table, wrap it into a new one-element array and return that array.\n3. If the value is a table, inspect its keys to determine whether it already behaves like an array.\n4. If it is already an array, return it unchanged.\n5. Otherwise wrap the object into a new one-element array and return that array."
+  },
+  {
+    "request_text": "Пройди по объекту settings и верни только список ключей",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"settings\": {\n        \"theme\": \"dark\",\n        \"lang\": \"ru\",\n        \"timezone\": \"UTC\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor key, _ in pairs(wf.vars.settings) do\n  table.insert(result, key)\nend\n\nreturn result",
+    "request_algorithm": "1. Read the object at wf.vars.settings.\n2. Create a new result array.\n3. Iterate through all key-value pairs of the object.\n4. Append each key to the result array.\n5. Return the key array."
+  },
+  {
+    "request_text": "Пройди по объекту settings и верни только список значений",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"settings\": {\n        \"theme\": \"dark\",\n        \"lang\": \"ru\",\n        \"timezone\": \"UTC\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor _, value in pairs(wf.vars.settings) do\n  table.insert(result, value)\nend\n\nreturn result",
+    "request_algorithm": "1. Read the object at wf.vars.settings.\n2. Create a new result array.\n3. Iterate through all key-value pairs of the object.\n4. Append each value to the result array.\n5. Return the value array."
+  },
+  {
+    "request_text": "Проверь, есть ли ключ currency в объекте payment",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"payment\": {\n        \"amount\": 1500,\n        \"currency\": \"RUB\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "return rawget(wf.vars.payment, \"currency\") ~= nil",
+    "request_algorithm": "1. Read the object at wf.vars.payment.\n2. Access the currency field with raw field lookup so metatable fallback is ignored.\n3. Check whether the raw field value is not nil.\n4. Return the boolean result."
+  },
+  {
+    "request_text": "Верни 'adult', если age >= 18, иначе 'minor'",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"age\": 20\n    }\n  }\n}",
+    "request_answer_example": "if wf.vars.age >= 18 then\n  return \"adult\"\nelse\n  return \"minor\"\nend",
+    "request_algorithm": "1. Read the value at wf.vars.age.\n2. Compare the input value against the required threshold or condition.\n3. Return the first literal when the condition is true.\n4. Otherwise return the alternative literal."
+  },
+  {
+    "request_text": "Найди первое четное число в массиве numbers через while",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"numbers\": [3, 7, 9, 12, 15]\n    }\n  }\n}",
+    "request_answer_example": "local i = 1\nlocal numbers = wf.vars.numbers\n\nwhile i <= #numbers do\n  if numbers[i] % 2 == 0 then\n    return numbers[i]\n  end\n  i = i + 1\nend\n\nreturn nil",
+    "request_algorithm": "1. Read the array at wf.vars.numbers.\n2. Initialize an index for iteration.\n3. Loop through the array with a while condition until the end is reached.\n4. On each iteration, check whether the current element satisfies the requested predicate.\n5. Return the first matching element immediately.\n6. If no element matches, return nil."
+  },
+  {
+    "request_text": "Найди минимальное число в массиве через numeric for",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"numbers\": [8, 4, 11, 2, 7]\n    }\n  }\n}",
+    "request_answer_example": "local numbers = wf.vars.numbers\nlocal minValue = numbers[1]\n\nfor i = 2, #numbers do\n  if numbers[i] < minValue then\n    minValue = numbers[i]\n  end\nend\n\nreturn minValue",
+    "request_algorithm": "1. Read the numeric array at wf.vars.numbers.\n2. Initialize the current minimum from the first element.\n3. Iterate from the second element to the end of the array.\n4. Whenever a smaller value is found, update the current minimum.\n5. Return the final minimum value."
+  },
+  {
+    "request_text": "Повторяй увеличение счетчика, пока он не станет равен limit",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"counter\": 2,\n      \"limit\": 5\n    }\n  }\n}",
+    "request_answer_example": "local counter = wf.vars.counter\n\nrepeat\n  counter = counter + 1\nuntil counter >= wf.vars.limit\n\nreturn counter",
+    "request_algorithm": "1. Read the value at wf.vars.counter.\n2. Read the value at wf.vars.limit.\n3. Initialize the working counter from the source value.\n4. Increase the counter inside a repeat-until loop.\n5. Stop when the counter reaches or exceeds the limit.\n6. Return the final counter value."
+  },
+  {
+    "request_text": "Посчитай одновременно сумму и разницу двух чисел",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"a\": 15,\n      \"b\": 4\n    }\n  }\n}",
+    "request_answer_example": "local function calc(x, y)\n  return x + y, x - y\nend\n\nlocal sum, diff = calc(wf.vars.a, wf.vars.b)\n\nreturn {\n  sum = sum,\n  diff = diff\n}",
+    "request_algorithm": "1. Read the value at wf.vars.a.\n2. Read the value at wf.vars.b.\n3. Call helper logic that computes both the sum and the difference of the two numbers.\n4. Capture both returned values separately.\n5. Place the sum and the difference into a result table.\n6. Return that result table."
+  },
+  {
+    "request_text": "Создай локальную функцию для обрезки пробелов у строки name",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"name\": \"  Ivan Petrov  \"\n    }\n  }\n}",
+    "request_answer_example": "local function trim(s)\n  return string.match(s, \"^%s*(.-)%s*$\")\nend\n\nreturn trim(wf.vars.name)",
+    "request_algorithm": "1. Read the source string at wf.vars.name.\n2. Define helper logic that removes leading and trailing whitespace.\n3. Apply that helper to the source string.\n4. Return the trimmed string."
+  },
+  {
+    "request_text": "Верни только второй результат функции",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"x\": 10,\n      \"y\": 3\n    }\n  }\n}",
+    "request_answer_example": "local function getPair(a, b)\n  return a + b, a * b\nend\n\nlocal _, product = getPair(wf.vars.x, wf.vars.y)\nreturn product",
+    "request_algorithm": "1. Read the value at wf.vars.x.\n2. Read the value at wf.vars.y.\n3. Call helper logic that returns multiple values.\n4. Ignore the first returned value and capture only the second one.\n5. Return the second result."
+  },
+  {
+    "request_text": "Безопасно выполни деление a на b и верни ошибку текстом, если b равно 0",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"a\": 10,\n      \"b\": 0\n    }\n  }\n}",
+    "request_answer_example": "local ok, result = pcall(function()\n  if wf.vars.b == 0 then\n    error(\"division by zero\")\n  end\n  return wf.vars.a / wf.vars.b\nend)\n\nif ok then\n  return result\nend\n\nreturn result",
+    "request_algorithm": "1. Read the value at wf.vars.b.\n2. Read the value at wf.vars.a.\n3. Execute the division logic inside protected call handling.\n4. Inside that protected logic, raise an error when the divisor is zero.\n5. If the protected call succeeds, return the numeric division result.\n6. If the protected call fails, return the error text instead."
+  },
+  {
+    "request_text": "Выполни функцию с xpcall и верни текст трассировки при ошибке",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"user\": {\n        \"name\": \"Ivan\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local function run()\n  return wf.vars.user.profile.email\nend\n\nlocal function onError(err)\n  return debug.traceback(err, 2)\nend\n\nlocal ok, result = xpcall(run, onError)\n\nif ok then\n  return result\nend\n\nreturn result",
+    "request_algorithm": "1. Define the main function that reads wf.vars.user.profile.email.\n2. Define an error handler that converts an error into a traceback string.\n3. Run the main function through xpcall with that error handler.\n4. If the protected call succeeds, return the successful result.\n5. If the protected call fails, return the generated traceback text."
+  },
+  {
+    "request_text": "Добавь значение по умолчанию 'RUB' для отсутствующего поля currency через __index",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"payment\": {\n        \"amount\": 1000\n      }\n    }\n  }\n}",
+    "request_answer_example": "local payment = wf.vars.payment\n\nsetmetatable(payment, {\n  __index = function(_, key)\n    if key == \"currency\" then\n      return \"RUB\"\n    end\n    return nil\n  end\n})\n\nreturn payment.currency",
+    "request_algorithm": "1. Read the object at wf.vars.payment.\n2. Attach a metatable with an __index handler.\n3. In that handler, return the requested default value only for the missing target field.\n4. Read the target field from the object.\n5. Return the resolved value."
+  },
+  {
+    "request_text": "Переопредели tostring для объекта user",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"user\": {\n        \"id\": 77,\n        \"name\": \"Olga\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local user = wf.vars.user\n\nsetmetatable(user, {\n  __tostring = function(obj)\n    return string.format(\"User(id=%d, name=%s)\", obj.id, obj.name)\n  end\n})\n\nreturn tostring(user)",
+    "request_algorithm": "1. Read the object at wf.vars.user.\n2. Attach a metatable that defines custom __tostring behavior for that object.\n3. Inside the __tostring handler, build the exact formatted string from the object's id and name fields.\n4. Convert the object to a string with tostring.\n5. Return the custom string representation."
+  },
+  {
+    "request_text": "Сделай объект callable и возвращай приветствие по имени",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"person\": {\n        \"name\": \"Nikita\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local person = wf.vars.person\n\nsetmetatable(person, {\n  __call = function(obj, prefix)\n    return prefix .. \", \" .. obj.name\n  end\n})\n\nreturn person(\"Привет\")",
+    "request_algorithm": "1. Read the object at wf.vars.person.\n2. Attach a metatable that defines __call behavior for the object.\n3. Inside the __call handler, concatenate the provided prefix with the object's name.\n4. Invoke the object as a function.\n5. Return the resulting greeting string."
+  },
+  {
+    "request_text": "Объедини два объекта тегов через __concat",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"left\": {\"value\": \"lua\"},\n      \"right\": {\"value\": \"manual\"}\n    }\n  }\n}",
+    "request_answer_example": "local mt = {\n  __concat = function(a, b)\n    return { value = a.value .. \"-\" .. b.value }\n  end\n}\n\nlocal left = wf.vars.left\nlocal right = wf.vars.right\n\nsetmetatable(left, mt)\nsetmetatable(right, mt)\n\nlocal result = left .. right\nreturn result.value",
+    "request_algorithm": "1. Read the value at wf.vars.left.\n2. Read the value at wf.vars.right.\n3. Create metatable logic that defines how two objects are concatenated.\n4. Attach that metatable to both source objects.\n5. Concatenate the two objects so a new combined object is produced.\n6. Read the required field from the combined object and return it."
+  },
+  {
+    "request_text": "Создай coroutine, которая по очереди отдает три шага обработки",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local co = coroutine.create(function()\n  coroutine.yield(\"step_1\")\n  coroutine.yield(\"step_2\")\n  coroutine.yield(\"step_3\")\n  return \"done\"\nend)\n\nlocal result = _utils.array.new()\n\nlocal ok1, value1 = coroutine.resume(co)\nlocal ok2, value2 = coroutine.resume(co)\nlocal ok3, value3 = coroutine.resume(co)\nlocal ok4, value4 = coroutine.resume(co)\n\ntable.insert(result, value1)\ntable.insert(result, value2)\ntable.insert(result, value3)\ntable.insert(result, value4)\n\nreturn result",
+    "request_algorithm": "1. Create a coroutine that yields the required step values in sequence and then returns the final value.\n2. Create a result array to collect outputs from each resume call.\n3. Resume the coroutine repeatedly until all planned yielded values and the final return value are obtained.\n4. Append each received value to the result array in order.\n5. Return the collected array."
+  },
+  {
+    "request_text": "Проверь статус coroutine до и после resume",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local co = coroutine.create(function()\n  coroutine.yield(\"paused\")\n  return \"finished\"\nend)\n\nlocal before = coroutine.status(co)\ncoroutine.resume(co)\nlocal middle = coroutine.status(co)\ncoroutine.resume(co)\nlocal after = coroutine.status(co)\n\nreturn {\n  before = before,\n  middle = middle,\n  after = after\n}",
+    "request_algorithm": "1. Create the coroutine with the required yield and final return behavior.\n2. Read the coroutine status before the first resume.\n3. Resume the coroutine once and read the status again.\n4. Resume the coroutine again until it finishes and read the final status.\n5. Return an object containing the before, middle, and after statuses."
+  },
+  {
+    "request_text": "Проверь условие через assert: amount должен быть положительным",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"amount\": 50\n    }\n  }\n}",
+    "request_answer_example": "return assert(wf.vars.amount > 0, \"amount must be positive\")",
+    "request_algorithm": "1. Read the numeric value at wf.vars.amount.\n2. Assert that the value is greater than zero with the required error message.\n3. Return the assertion result when the check passes."
+  },
+  {
+    "request_text": "Получи metatable объекта config",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"config\": {\n        \"env\": \"prod\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "setmetatable(wf.vars.config, { __index = {} })\nreturn getmetatable(wf.vars.config)",
+    "request_algorithm": "1. Read the object at wf.vars.config.\n2. Obtain the metatable attached to that object.\n3. Return the metatable value."
+  },
+  {
+    "request_text": "Верни все аргументы, начиная со второго, из массива values с помощью select",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"values\": [\"A\", \"B\", \"C\", \"D\"]\n    }\n  }\n}",
+    "request_answer_example": "local function slice(...)\n  return { select(2, ...) }\nend\n\nreturn slice(\n  wf.vars.values[1],\n  wf.vars.values[2],\n  wf.vars.values[3],\n  wf.vars.values[4]\n)",
+    "request_algorithm": "1. Read the source values from wf.vars.values.\n2. Pass the array elements as variadic arguments to helper logic.\n3. Use select to capture all arguments starting from the second one.\n4. Pack those remaining arguments into a new array.\n5. Return the new array."
+  },
+  {
+    "request_text": "Проверь сырую длину строки или массива через rawlen",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"codes\": [\"A1\", \"B2\", \"C3\"]\n    }\n  }\n}",
+    "request_answer_example": "return rawlen(wf.vars.codes)",
+    "request_algorithm": "1. Read the target value at wf.vars.codes.\n2. Compute its raw length with rawlen.\n3. Return the resulting length."
+  },
+  {
+    "request_text": "Используй next, чтобы получить первый ключ и значение из объекта headers",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"headers\": {\n        \"Content-Type\": \"application/json\",\n        \"Accept\": \"application/json\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local key, value = next(wf.vars.headers)\nreturn {\n  key = key,\n  value = value\n}",
+    "request_algorithm": "1. Read the object at wf.vars.headers.\n2. Use next to obtain the first available key-value pair.\n3. Place the key and value into a result table.\n4. Return that table."
+  },
+  {
+    "request_text": "Покажи текущий package.path",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "return package.path",
+    "request_algorithm": "1. Read the current Lua package.path value.\n2. Return that path string."
+  },
+  {
+    "request_text": "Найди путь к модулю mymodule через package.searchpath",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"module_name\": \"mymodule\"\n    }\n  }\n}",
+    "request_answer_example": "return package.searchpath(wf.vars.module_name, package.path)",
+    "request_algorithm": "1. Read the module name at wf.vars.module_name.\n2. Search for that module inside package.path.\n3. Return the resolved file path, if found."
+  },
+  {
+    "request_text": "Посчитай количество UTF-8 символов в строке greeting",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"greeting\": \"Привет\"\n    }\n  }\n}",
+    "request_answer_example": "return utf8.len(wf.vars.greeting)",
+    "request_algorithm": "1. Read the UTF-8 string at wf.vars.greeting.\n2. Count the number of UTF-8 characters in the string.\n3. Return the character count."
+  },
+  {
+    "request_text": "Пройди по UTF-8 кодам символов в строке и верни массив codepoint-ов",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"text\": \"Hi✓\"\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor _, code in utf8.codes(wf.vars.text) do\n  table.insert(result, code)\nend\n\nreturn result",
+    "request_algorithm": "1. Read the UTF-8 string at wf.vars.text.\n2. Create a new result array.\n3. Iterate through all UTF-8 codepoints of the string.\n4. Append each codepoint value to the result array.\n5. Return the array of codepoints."
+  },
+  {
+    "request_text": "Построй строку из UTF-8 codepoint-ов",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "return utf8.char(1055, 1088, 1080, 1074, 1077, 1090)",
+    "request_algorithm": "1. Take the provided UTF-8 codepoint values in the given order.\n2. Convert those codepoints into a UTF-8 string.\n3. Return the constructed string."
+  },
+  {
+    "request_text": "Возьми абсолютное значение debt",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"debt\": -450\n    }\n  }\n}",
+    "request_answer_example": "return math.abs(wf.vars.debt)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.debt.\n2. Compute its absolute value.\n3. Return the result."
+  },
+  {
+    "request_text": "Округли число score вверх",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"score\": 7.2\n    }\n  }\n}",
+    "request_answer_example": "return math.ceil(wf.vars.score)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.score.\n2. Round it upward to the next integer with ceiling behavior.\n3. Return the rounded result."
+  },
+  {
+    "request_text": "Округли число score вниз",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"score\": 7.9\n    }\n  }\n}",
+    "request_answer_example": "return math.floor(wf.vars.score)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.score.\n2. Round it downward to the previous integer with floor behavior.\n3. Return the rounded result."
+  },
+  {
+    "request_text": "Найди максимальное значение в списке трех метрик",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"a\": 10,\n      \"b\": 40,\n      \"c\": 25\n    }\n  }\n}",
+    "request_answer_example": "return math.max(wf.vars.a, wf.vars.b, wf.vars.c)",
+    "request_algorithm": "1. Read the value at wf.vars.a.\n2. Read the value at wf.vars.b.\n3. Read the value at wf.vars.c.\n4. Compare the provided numeric values with the appropriate extremum function.\n5. Return the resulting maximum or minimum value."
+  },
+  {
+    "request_text": "Найди минимальное значение в списке трех метрик",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"a\": 10,\n      \"b\": 40,\n      \"c\": 25\n    }\n  }\n}",
+    "request_answer_example": "return math.min(wf.vars.a, wf.vars.b, wf.vars.c)",
+    "request_algorithm": "1. Read the value at wf.vars.a.\n2. Read the value at wf.vars.b.\n3. Read the value at wf.vars.c.\n4. Compare the provided numeric values with the appropriate extremum function.\n5. Return the resulting maximum or minimum value."
+  },
+  {
+    "request_text": "Возведи число base в степень exp",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"base\": 3,\n      \"exp\": 4\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.base ^ wf.vars.exp",
+    "request_algorithm": "1. Read the value at wf.vars.base.\n2. Read the value at wf.vars.exp.\n3. Raise the base value to the specified exponent.\n4. Return the power result."
+  },
+  {
+    "request_text": "Получи квадратный корень из area",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"area\": 144\n    }\n  }\n}",
+    "request_answer_example": "return math.sqrt(wf.vars.area)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.area.\n2. Compute its square root.\n3. Return the result."
+  },
+  {
+    "request_text": "Преобразуй угол degree в радианы",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"degree\": 180\n    }\n  }\n}",
+    "request_answer_example": "return math.rad(wf.vars.degree)",
+    "request_algorithm": "1. Read the degree value at wf.vars.degree.\n2. Convert the angle from degrees to radians.\n3. Return the converted value."
+  },
+  {
+    "request_text": "Преобразуй угол radian в градусы",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"radian\": 3.141592653589793\n    }\n  }\n}",
+    "request_answer_example": "return math.deg(wf.vars.radian)",
+    "request_algorithm": "1. Read the radian value at wf.vars.radian.\n2. Convert the angle from radians to degrees.\n3. Return the converted value."
+  },
+  {
+    "request_text": "Раздели число на целую и дробную части",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"price\": 199.75\n    }\n  }\n}",
+    "request_answer_example": "local intPart, fracPart = math.modf(wf.vars.price)\nreturn {\n  intPart = intPart,\n  fracPart = fracPart\n}",
+    "request_algorithm": "1. Read the numeric value at wf.vars.price.\n2. Split the number into its integer part and fractional part.\n3. Place both parts into a result table.\n4. Return that table."
+  },
+  {
+    "request_text": "Проверь, является ли число целым",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"value\": 42\n    }\n  }\n}",
+    "request_answer_example": "return math.type(wf.vars.value) == \"integer\"",
+    "request_algorithm": "1. Read the numeric value at wf.vars.value.\n2. Determine its Lua numeric subtype.\n3. Compare that subtype with integer.\n4. Return the boolean result."
+  },
+  {
+    "request_text": "Сгенерируй случайное число от 1 до 10",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"seed\": 12345\n    }\n  }\n}",
+    "request_answer_example": "math.randomseed(wf.vars.seed)\nreturn math.random(1, 10)",
+    "request_algorithm": "1. Read the random seed at wf.vars.seed.\n2. Initialize the random number generator with that seed.\n3. Generate a random integer in the requested range.\n4. Return the generated number."
+  },
+  {
+    "request_text": "Упакуй несколько значений в таблицу с полем n через table.pack",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"a\": \"x\",\n      \"b\": null,\n      \"c\": \"z\"\n    }\n  }\n}",
+    "request_answer_example": "return table.pack(wf.vars.a, wf.vars.b, wf.vars.c)",
+    "request_algorithm": "1. Read the value at wf.vars.a.\n2. Read the value at wf.vars.b.\n3. Read the value at wf.vars.c.\n4. Pack the specified values into a table that preserves nil entries and stores the total count in field n.\n5. Return the packed table."
+  },
+  {
+    "request_text": "Распакуй первые три элемента массива values",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"values\": [\"A\", \"B\", \"C\"]\n    }\n  }\n}",
+    "request_answer_example": "local a, b, c = table.unpack(wf.vars.values)\nreturn {\n  first = a,\n  second = b,\n  third = c\n}",
+    "request_algorithm": "1. Read the array at wf.vars.values.\n2. Unpack the first three elements into separate local values.\n3. Create a result table with those values under the required field names.\n4. Return the result table."
+  },
+  {
+    "request_text": "Прочитай весь текст файла целиком",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/example.txt\"\n    }\n  }\n}",
+    "request_answer_example": "local file = assert(io.open(wf.vars.filePath, \"r\"))\nlocal content = file:read(\"*a\")\nfile:close()\nreturn content",
+    "request_algorithm": "1. Read the file path at wf.vars.filePath.\n2. Open the file for reading and ensure the handle was obtained.\n3. Read the entire file content.\n4. Close the file handle.\n5. Return the full file text."
+  },
+  {
+    "request_text": "Прочитай из файла только первую строку",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/example.txt\"\n    }\n  }\n}",
+    "request_answer_example": "local file = assert(io.open(wf.vars.filePath, \"r\"))\nlocal firstLine = file:read(\"*l\")\nfile:close()\nreturn firstLine",
+    "request_algorithm": "1. Read the file path at wf.vars.filePath.\n2. Open the file for reading.\n3. Read only the first line from the file.\n4. Close the file handle.\n5. Return the first line."
+  },
+  {
+    "request_text": "Запиши строку в файл output.txt",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/output.txt\",\n      \"text\": \"Hello from Lua\"\n    }\n  }\n}",
+    "request_answer_example": "local file = assert(io.open(wf.vars.filePath, \"w\"))\nfile:write(wf.vars.text)\nfile:close()\nreturn true",
+    "request_algorithm": "1. Read the value at wf.vars.filePath.\n2. Read the value at wf.vars.text.\n3. Open the target file for writing.\n4. Write the required content to the file.\n5. Close the file handle.\n6. Return true to indicate successful completion."
+  },
+  {
+    "request_text": "Дозапиши новую строку в конец существующего файла",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/app.log\",\n      \"line\": \"new event\"\n    }\n  }\n}",
+    "request_answer_example": "local file = assert(io.open(wf.vars.filePath, \"a\"))\nfile:write(wf.vars.line .. \"\\n\")\nfile:close()\nreturn true",
+    "request_algorithm": "1. Read the value at wf.vars.filePath.\n2. Read the value at wf.vars.line.\n3. Open the file in append mode.\n4. Write the new line followed by a newline character.\n5. Close the file handle.\n6. Return true to indicate successful completion."
+  },
+  {
+    "request_text": "Прочитай файл построчно в массив",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/users.txt\"\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\nlocal file = assert(io.open(wf.vars.filePath, \"r\"))\n\nfor line in file:lines() do\n  table.insert(result, line)\nend\n\nfile:close()\nreturn result",
+    "request_algorithm": "1. Read the file path at wf.vars.filePath.\n2. Open the file for reading.\n3. Create a new result array.\n4. Iterate through the file line by line.\n5. Append each line to the result array.\n6. Close the file handle.\n7. Return the collected lines."
+  },
+  {
+    "request_text": "Узнай текущую позицию курсора в файле и перейди в начало",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/example.txt\"\n    }\n  }\n}",
+    "request_answer_example": "local file = assert(io.open(wf.vars.filePath, \"r\"))\nlocal posBefore = file:seek()\nfile:seek(\"set\", 0)\nlocal posAfter = file:seek()\nfile:close()\n\nreturn {\n  posBefore = posBefore,\n  posAfter = posAfter\n}",
+    "request_algorithm": "1. Read the file path at wf.vars.filePath.\n2. Open the file for reading.\n3. Read the current cursor position.\n4. Seek to the beginning of the file.\n5. Read the cursor position again.\n6. Close the file handle.\n7. Return both positions in a result object."
+  },
+  {
+    "request_text": "Прочитай из стандартного ввода одну строку",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "return io.read(\"*l\")",
+    "request_algorithm": "1. Read one full line from standard input.\n2. Return the read line."
+  },
+  {
+    "request_text": "Выведи сообщение в стандартный вывод",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"message\": \"Process started\"\n    }\n  }\n}",
+    "request_answer_example": "io.write(wf.vars.message)\nreturn true",
+    "request_algorithm": "1. Read the message at wf.vars.message.\n2. Write that message to standard output.\n3. Return true."
+  },
+  {
+    "request_text": "Получить текущее Unix-время",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "return os.time()",
+    "request_algorithm": "1. Read the current Unix timestamp from the operating system.\n2. Return that timestamp."
+  },
+  {
+    "request_text": "Отформатировать текущую дату в YYYY-MM-DD",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "return os.date(\"%Y-%m-%d\")",
+    "request_algorithm": "1. Read the current date from the operating system.\n2. Format it with the exact pattern YYYY-MM-DD.\n3. Return the formatted date string."
+  },
+  {
+    "request_text": "Посчитать разницу в секундах между двумя датами",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"start\": {\n        \"year\": 2025,\n        \"month\": 1,\n        \"day\": 1,\n        \"hour\": 10\n      },\n      \"finish\": {\n        \"year\": 2025,\n        \"month\": 1,\n        \"day\": 1,\n        \"hour\": 12\n      }\n    }\n  }\n}",
+    "request_answer_example": "local t1 = os.time(wf.vars.start)\nlocal t2 = os.time(wf.vars.finish)\nreturn os.difftime(t2, t1)",
+    "request_algorithm": "1. Read the value at wf.vars.start.\n2. Read the value at wf.vars.finish.\n3. Convert both date tables to Unix timestamps.\n4. Subtract the first timestamp from the second one.\n5. Return the time difference in seconds."
+  },
+  {
+    "request_text": "Получить значение переменной окружения HOME",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"env_name\": \"HOME\"\n    }\n  }\n}",
+    "request_answer_example": "return os.getenv(wf.vars.env_name)",
+    "request_algorithm": "1. Read the environment variable name at wf.vars.env_name.\n2. Request that environment variable from the operating system.\n3. Return the resulting value."
+  },
+  {
+    "request_text": "Переименовать файл через os.rename",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"oldPath\": \"/tmp/old.txt\",\n      \"newPath\": \"/tmp/new.txt\"\n    }\n  }\n}",
+    "request_answer_example": "local ok, err = os.rename(wf.vars.oldPath, wf.vars.newPath)\nif ok then\n  return true\nend\nreturn err",
+    "request_algorithm": "1. Read the value at wf.vars.oldPath.\n2. Read the value at wf.vars.newPath.\n3. Attempt to rename the file from the old path to the new path.\n4. If the operation succeeds, return true.\n5. If the operation fails, return the error text."
+  },
+  {
+    "request_text": "Удалить временный файл через os.remove",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/temp.txt\"\n    }\n  }\n}",
+    "request_answer_example": "local ok, err = os.remove(wf.vars.filePath)\nif ok then\n  return true\nend\nreturn err",
+    "request_algorithm": "1. Read the file path at wf.vars.filePath.\n2. Attempt to remove that file.\n3. If the operation succeeds, return true.\n4. If the operation fails, return the error text."
+  },
+  {
+    "request_text": "Создать уникальное временное имя файла",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "return os.tmpname()",
+    "request_algorithm": "1. Request a unique temporary file name from the operating system.\n2. Return that generated name."
+  },
+  {
+    "request_text": "Поставь флаг READ через bitwise OR",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"flags\": 2,\n      \"read_flag\": 1\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.flags | wf.vars.read_flag",
+    "request_algorithm": "1. Read the value at wf.vars.flags.\n2. Read the value at wf.vars.read_flag.\n3. Combine the two flag values with bitwise OR.\n4. Return the combined flags value."
+  },
+  {
+    "request_text": "Проверь, установлен ли флаг READ",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"flags\": 5,\n      \"read_flag\": 1\n    }\n  }\n}",
+    "request_answer_example": "return (wf.vars.flags & wf.vars.read_flag) ~= 0",
+    "request_algorithm": "1. Read the value at wf.vars.flags.\n2. Read the value at wf.vars.read_flag.\n3. Apply bitwise AND between the flags value and the requested flag.\n4. Check whether the result is nonzero.\n5. Return the boolean result."
+  },
+  {
+    "request_text": "Сдвинь число влево на 2 бита",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"value\": 3\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.value << 2",
+    "request_algorithm": "1. Read the numeric value at wf.vars.value.\n2. Shift the value left by the requested number of bits.\n3. Return the shifted result."
+  },
+  {
+    "request_text": "Сдвинь число вправо на 1 бит",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"value\": 8\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.value >> 1",
+    "request_algorithm": "1. Read the numeric value at wf.vars.value.\n2. Shift the value right by the requested number of bits.\n3. Return the shifted result."
+  },
+  {
+    "request_text": "Проверь, что строка phone состоит только из цифр, плюса и дефисов",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"phone\": \"+7-900-123-45-67\"\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.phone:match(\"^[%+%d%-]+$\") ~= nil",
+    "request_algorithm": "1. Read the source string at wf.vars.phone.\n2. Apply a pattern that allows only the required character set for the whole string.\n3. Return whether the entire string matches that rule."
+  },
+  {
+    "request_text": "Извлеки все числа из текста в массив",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"text\": \"Order 15 contains 3 items and costs 490\"\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor num in string.gmatch(wf.vars.text, \"%d+\") do\n  table.insert(result, tonumber(num))\nend\n\nreturn result",
+    "request_algorithm": "1. Read the text at wf.vars.text.\n2. Create a new result array.\n3. Iterate through every numeric substring in the text.\n4. Convert each captured substring to a number.\n5. Append each number to the result array.\n6. Return the result array."
+  },
+  {
+    "request_text": "Замени несколько пробелов подряд на один пробел",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"text\": \"Lua    is   lightweight\"\n    }\n  }\n}",
+    "request_answer_example": "return string.gsub(wf.vars.text, \"%s+\", \" \")",
+    "request_algorithm": "1. Read the text at wf.vars.text.\n2. Replace each run of one or more whitespace characters with a single space.\n3. Return the normalized string."
+  },
+  {
+    "request_text": "Собери и выполни простое выражение из строки через load",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"expression\": \"return 2 + 3 * 4\"\n    }\n  }\n}",
+    "request_answer_example": "local fn = assert(load(wf.vars.expression))\nreturn fn()",
+    "request_algorithm": "1. Read the Lua expression string at wf.vars.expression.\n2. Compile that string into an executable function with load.\n3. Execute the compiled function.\n4. Return its result."
+  },
+  {
+    "request_text": "Загрузи Lua-файл и выполни его через loadfile",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/script.lua\"\n    }\n  }\n}",
+    "request_answer_example": "local fn = assert(loadfile(wf.vars.filePath))\nreturn fn()",
+    "request_algorithm": "1. Read the file path at wf.vars.filePath.\n2. Load the Lua chunk from that file with loadfile.\n3. Execute the loaded function.\n4. Return its result."
+  },
+  {
+    "request_text": "Принудительно запусти сборку мусора",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "collectgarbage(\"collect\")\nreturn true",
+    "request_algorithm": "1. Trigger a full Lua garbage collection cycle.\n2. Return true after the collection request."
+  },
+  {
+    "request_text": "Получить объем памяти Lua в килобайтах",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "return collectgarbage(\"count\")",
+    "request_algorithm": "1. Read the current Lua memory usage in kilobytes from the garbage collector.\n2. Return that numeric value."
+  },
+  {
+    "request_text": "Получить информацию о текущей функции через debug.getinfo",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local function sample()\n  local info = debug.getinfo(1, \"nSl\")\n  return {\n    name = info.name,\n    what = info.what,\n    currentline = info.currentline\n  }\nend\n\nreturn sample()",
+    "request_algorithm": "1. Define or enter the function whose debug information should be inspected.\n2. Read the current function metadata with debug.getinfo using the required fields.\n3. Extract the requested name, what, and currentline values.\n4. Place them into a result table.\n5. Return that table."
+  },
+  {
+    "request_text": "Построить traceback вручную",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local function level3()\n  return debug.traceback(\"manual traceback\", 2)\nend\n\nlocal function level2()\n  return level3()\nend\n\nlocal function level1()\n  return level2()\nend\n\nreturn level1()",
+    "request_algorithm": "1. Create the nested function call chain required for the traceback.\n2. At the deepest level, build a traceback with the required message.\n3. Return that traceback string to the caller."
+  },
+  {
+    "request_text": "Увеличивай значение переменной try_count_n на каждой итерации",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"try_count_n\": 3\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.try_count_n + 1",
+    "request_algorithm": "1. Read the current counter value at wf.vars.try_count_n.\n2. Increase the counter by one.\n3. Return the incremented value."
+  },
+  {
+    "request_text": "Для полученных данных из предыдущего REST запроса очисти значения переменных ID, ENTITY_ID, CALL",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"RESTbody\": {\n        \"result\": [\n          {\n            \"ID\": 123,\n            \"ENTITY_ID\": 456,\n            \"CALL\": \"example_call_1\",\n            \"OTHER_KEY_1\": \"value1\",\n            \"OTHER_KEY_2\": \"value2\"\n          },\n          {\n            \"ID\": 789,\n            \"ENTITY_ID\": 101,\n            \"CALL\": \"example_call_2\",\n            \"EXTRA_KEY_1\": \"value3\",\n            \"EXTRA_KEY_2\": \"value4\"\n          }\n        ]\n      }\n    }\n  }\n}",
+    "request_answer_example": "local result = wf.vars.RESTbody.result\n\nfor _, filteredEntry in pairs(result) do\n  for key, _ in pairs(filteredEntry) do\n    if key ~= \"ID\" and key ~= \"ENTITY_ID\" and key ~= \"CALL\" then\n      filteredEntry[key] = nil\n    end\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the array at wf.vars.RESTbody.result.\n2. If wf.vars.RESTbody.result is not a table or array-like collection, return it unchanged.\n3. Iterate through each element in wf.vars.RESTbody.result.\n4. For each element, if the element is an object-like table, set its ID field to nil.\n5. For each element, if the element is an object-like table, set its ENTITY_ID field to nil.\n6. For each element, if the element is an object-like table, set its CALL field to nil.\n7. Preserve all other fields in each object unchanged.\n8. Keep the top-level array at wf.vars.RESTbody.result unchanged.\n9. Return wf.vars.RESTbody.result."
+  },
+  {
+    "request_text": "Преобразуй время из формата YYYYMMDD и HHMMSS в строку ISO 8601",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"json\": {\n        \"IDOC\": {\n          \"ZCDF_HEAD\": {\n            \"DATUM\": \"20231015\",\n            \"TIME\": \"153000\"\n          }\n        }\n      }\n    }\n  }\n}",
+    "request_answer_example": "local DATUM = wf.vars.json.IDOC.ZCDF_HEAD.DATUM\nlocal TIME = wf.vars.json.IDOC.ZCDF_HEAD.TIME\n\nlocal function safe_sub(str, startPos, endPos)\n  local s = string.sub(str, startPos, math.min(endPos, #str))\n  return s ~= \"\" and s or \"00\"\nend\n\nlocal year = safe_sub(DATUM, 1, 4)\nlocal month = safe_sub(DATUM, 5, 6)\nlocal day = safe_sub(DATUM, 7, 8)\nlocal hour = safe_sub(TIME, 1, 2)\nlocal minute = safe_sub(TIME, 3, 4)\nlocal second = safe_sub(TIME, 5, 6)\n\nreturn string.format(\"%s-%s-%sT%s:%s:%s.00000Z\", year, month, day, hour, minute, second)",
+    "request_algorithm": "1. Read the DATUM string from wf.vars.json.IDOC.ZCDF_HEAD.DATUM.\n2. Read the TIME string from wf.vars.json.IDOC.ZCDF_HEAD.TIME.\n3. Define helper logic for safe fixed-width substring extraction that returns the extracted substring when it exists and returns a fallback value when the source string is missing or too short.\n4. Extract the YEAR component from DATUM using character positions 1 to 4, with fallback \"0000\".\n5. Extract the MONTH component from DATUM using character positions 5 to 6, with fallback \"00\".\n6. Extract the DAY component from DATUM using character positions 7 to 8, with fallback \"00\".\n7. Extract the HOUR component from TIME using character positions 1 to 2, with fallback \"00\".\n8. Extract the MINUTE component from TIME using character positions 3 to 4, with fallback \"00\".\n9. Extract the SECOND component from TIME using character positions 5 to 6, with fallback \"00\".\n10. Construct a string in the exact literal format YYYY-MM-DDTHH:MM:SS.00000Z using those six extracted components.\n11. Return the resulting ISO 8601 string."
+  },
+  {
+    "request_text": "Сделай так, чтобы все items внутри ZCDF_PACKAGES всегда были массивами",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"json\": {\n        \"IDOC\": {\n          \"ZCDF_HEAD\": {\n            \"ZCDF_PACKAGES\": [\n              { \"items\": [{\"sku\": \"A\"}, {\"sku\": \"B\"}] },\n              { \"items\": {\"sku\": \"C\"} }\n            ]\n          }\n        }\n      }\n    }\n  }\n}",
+    "request_answer_example": "local function ensureArray(t)\n  if type(t) ~= \"table\" then\n    return { t }\n  end\n\n  local isArray = true\n  for k, _ in pairs(t) do\n    if type(k) ~= \"number\" or math.floor(k) ~= k then\n      isArray = false\n      break\n    end\n  end\n\n  return isArray and t or { t }\nend\n\nlocal function ensureAllItemsAreArrays(objectsArray)\n  if type(objectsArray) ~= \"table\" then\n    return objectsArray\n  end\n\n  for _, obj in ipairs(objectsArray) do\n    if type(obj) == \"table\" and obj.items then\n      obj.items = ensureArray(obj.items)\n    end\n  end\n\n  return objectsArray\nend\n\nreturn ensureAllItemsAreArrays(wf.vars.json.IDOC.ZCDF_HEAD.ZCDF_PACKAGES)",
+    "request_algorithm": "1. Read the array at wf.vars.json.IDOC.ZCDF_HEAD.ZCDF_PACKAGES.\n2. Define helper logic that returns the input unchanged when it is already an array and wraps it into a one-element array otherwise.\n3. If the top-level value is not a table, return it unchanged.\n4. Iterate through each package object in ZCDF_PACKAGES.\n5. For each package object that contains the items field, replace items with the helper result so that items always becomes an array.\n6. Preserve all other package fields unchanged.\n7. Return the normalized ZCDF_PACKAGES array."
+  },
+  {
+    "request_text": "Отфильтруй элементы из массива, чтобы включить только те, у которых есть значения в полях Discount или Markdown",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"parsedCsv\": [\n        { \"SKU\": \"A001\", \"Discount\": \"10%\", \"Markdown\": \"\" },\n        { \"SKU\": \"A002\", \"Discount\": \"\", \"Markdown\": \"5%\" },\n        { \"SKU\": \"A003\", \"Discount\": null, \"Markdown\": null },\n        { \"SKU\": \"A004\", \"Discount\": \"\", \"Markdown\": \"\" }\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\nlocal items = wf.vars.parsedCsv\n\nfor _, item in ipairs(items) do\n  if (item.Discount ~= \"\" and item.Discount ~= nil) or (item.Markdown ~= \"\" and item.Markdown ~= nil) then\n    table.insert(result, item)\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the array at wf.vars.parsedCsv.\n2. Create a new result array.\n3. Iterate through each element of the source array.\n4. For each element, check whether Discount is neither nil nor an empty string, or Markdown is neither nil nor an empty string.\n5. Append only the matching elements to the result array.\n6. Return the filtered array."
+  },
+  {
+    "request_text": "Добавь переменную с квадратом числа",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"num\": \"5\"\n    }\n  }\n}",
+    "request_answer_example": "local n = tonumber(wf.vars.num)\nreturn {\n  num = n,\n  squared = n * n\n}",
+    "request_algorithm": "1. Read the numeric source value at wf.vars.num.\n2. Convert the source value to a number.\n3. Compute the square of that number.\n4. Create a result table containing the numeric value and its square.\n5. Return the result table."
+  },
+  {
+    "request_text": "Конвертируй время в переменной recallTime в unix-формат",
+    "request_data_example": "{\n  \"wf\": {\n    \"initVariables\": {\n      \"recallTime\": \"2023-10-15T15:30:00+00:00\"\n    }\n  }\n}",
+    "request_answer_example": "local iso_time = wf.initVariables.recallTime\nlocal days_in_month = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}\n\nif not iso_time or not iso_time:match(\"^%d%d%d%d%-%d%d%-%d%dT\") then\n  return nil\nend\n\nlocal function is_leap_year(year)\n  return (year % 4 == 0 and year % 100 ~= 0) or (year % 400 == 0)\nend\n\nlocal function days_since_epoch(year, month, day)\n  local days = 0\n\n  for y = 1970, year - 1 do\n    days = days + (is_leap_year(y) and 366 or 365)\n  end\n\n  for m = 1, month - 1 do\n    days = days + days_in_month[m]\n    if m == 2 and is_leap_year(year) then\n      days = days + 1\n    end\n  end\n\n  days = days + (day - 1)\n  return days\nend\n\nlocal function parse_iso8601_to_epoch(iso_str)\n  local year, month, day, hour, min, sec, ms, offset_sign, offset_hour, offset_min =\n    iso_str:match(\"(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)%.(%d+)([+-])(%d+):(%d+)\")\n\n  if not year then\n    year, month, day, hour, min, sec, offset_sign, offset_hour, offset_min =\n      iso_str:match(\"(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)([+-])(%d+):(%d+)\")\n    ms = 0\n  end\n\n  if not year then\n    error(\"Невозможно разобрать дату: \" .. tostring(iso_str))\n  end\n\n  year = tonumber(year)\n  month = tonumber(month)\n  day = tonumber(day)\n  hour = tonumber(hour)\n  min = tonumber(min)\n  sec = tonumber(sec)\n  offset_hour = tonumber(offset_hour)\n  offset_min = tonumber(offset_min)\n\n  local total_days = days_since_epoch(year, month, day)\n  local total_seconds = total_days * 86400 + hour * 3600 + min * 60 + sec\n  local offset_seconds = offset_hour * 3600 + offset_min * 60\n\n  if offset_sign == \"-\" then\n    offset_seconds = -offset_seconds\n  end\n\n  return total_seconds - offset_seconds\nend\n\nreturn parse_iso8601_to_epoch(iso_time)",
+    "request_algorithm": "1. Read the ISO 8601 datetime string from wf.initVariables.recallTime.\n2. Validate that the input string has the expected ISO-like date prefix.\n3. Define helper logic to detect leap years.\n4. Define helper logic to count the number of days since the Unix epoch for a given calendar date.\n5. Parse the date, time, optional fractional seconds, and timezone offset components from the input string.\n6. Convert the parsed date and time into total seconds since the Unix epoch.\n7. Convert the timezone offset into seconds and apply it with the correct sign.\n8. Return the final Unix timestamp."
+  },
+  {
+    "request_text": "Обрежь расширение файла у имени report.csv",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filename\": \"report.csv\"\n    }\n  }\n}",
+    "request_answer_example": "return string.match(wf.vars.filename, \"^(.*)%.\") or wf.vars.filename",
+    "request_algorithm": "1. Read the filename at wf.vars.filename.\n2. Match the part of the filename before the last dot.\n3. If such a match exists, return the matched base name.\n4. Otherwise return the original filename unchanged."
+  },
+  {
+    "request_text": "Проверь, заканчивается ли filename на .json",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filename\": \"payload.json\"\n    }\n  }\n}",
+    "request_answer_example": "return string.match(wf.vars.filename, \"%.json$\") ~= nil",
+    "request_algorithm": "1. Read the filename at wf.vars.filename.\n2. Check whether the string ends with the required literal suffix.\n3. Return the boolean result."
+  },
+  {
+    "request_text": "Извлеки имя и зону из домена example.org",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"domain\": \"example.org\"\n    }\n  }\n}",
+    "request_answer_example": "local name, zone = string.match(wf.vars.domain, \"^([^.]+)%.(.+)$\")\nreturn {\n  name = name,\n  zone = zone\n}",
+    "request_algorithm": "1. Read the domain string at wf.vars.domain.\n2. Split the domain into the part before the first dot and the remainder after it.\n3. Place those parts into a result table as name and zone.\n4. Return the result table."
+  },
+  {
+    "request_text": "Посчитай, сколько раз слово error встречается в тексте",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"text\": \"error in job, second error, third error\"\n    }\n  }\n}",
+    "request_answer_example": "local count = 0\nlocal text = wf.vars.text\n\nfor _ in string.gmatch(text, \"error\") do\n  count = count + 1\nend\n\nreturn count",
+    "request_algorithm": "1. Read the text at wf.vars.text.\n2. Initialize a counter to zero.\n3. Iterate through every occurrence of the target word in the text.\n4. Increase the counter for each match.\n5. Return the final count."
+  },
+  {
+    "request_text": "Удалить все цифры из строки phone",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"phone\": \"+7 (900) 123-45-67\"\n    }\n  }\n}",
+    "request_answer_example": "return string.gsub(wf.vars.phone, \"%d\", \"\")",
+    "request_algorithm": "1. Read the source string at wf.vars.phone.\n2. Replace every digit character with an empty string.\n3. Return the cleaned string."
+  },
+  {
+    "request_text": "Оставь только цифры в строке phone",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"phone\": \"+7 (900) 123-45-67\"\n    }\n  }\n}",
+    "request_answer_example": "local digits = string.gsub(wf.vars.phone, \"%D\", \"\")\nreturn digits",
+    "request_algorithm": "1. Read the source string at wf.vars.phone.\n2. Remove every non-digit character from the string.\n3. Return the remaining digit-only string."
+  },
+  {
+    "request_text": "Извлеки дату и время из timestamp 2025-04-01 12:30:45",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"timestamp\": \"2025-04-01 12:30:45\"\n    }\n  }\n}",
+    "request_answer_example": "local datePart, timePart = string.match(wf.vars.timestamp, \"^(%d%d%d%d%-%d%d%-%d%d) (%d%d:%d%d:%d%d)$\")\nreturn {\n  date = datePart,\n  time = timePart\n}",
+    "request_algorithm": "1. Read the timestamp string at wf.vars.timestamp.\n2. Match the date part and the time part from the timestamp format.\n3. Place the extracted date and time into a result table.\n4. Return that table."
+  },
+  {
+    "request_text": "Сделай slug из названия статьи, заменив пробелы на дефисы и переведя в нижний регистр",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"title\": \"Lua Manual Quick Start\"\n    }\n  }\n}",
+    "request_answer_example": "local slug = string.lower(wf.vars.title)\nslug = string.gsub(slug, \"%s+\", \"-\")\nreturn slug",
+    "request_algorithm": "1. Read the title string at wf.vars.title.\n2. Convert the string to lowercase.\n3. Replace all spaces with hyphen characters.\n4. Return the resulting slug string."
+  },
+  {
+    "request_text": "Построй индекс товаров по SKU для быстрого доступа",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"products\": [\n        {\"sku\": \"A001\", \"price\": 100},\n        {\"sku\": \"A002\", \"price\": 200}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = {}\n\nfor _, item in ipairs(wf.vars.products) do\n  result[item.sku] = item\nend\n\nreturn result",
+    "request_algorithm": "1. Read the source array at wf.vars.products.\n2. Create a new result object.\n3. Iterate through each element of the array.\n4. Use each element's {key} field as the key in the result object and store the whole element as the value.\n5. Return the result object."
+  },
+  {
+    "request_text": "Сгруппируй пользователей по полю role",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"users\": [\n        {\"name\": \"Ivan\", \"role\": \"admin\"},\n        {\"name\": \"Anna\", \"role\": \"editor\"},\n        {\"name\": \"Olga\", \"role\": \"admin\"}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = {}\n\nfor _, user in ipairs(wf.vars.users) do\n  if result[user.role] == nil then\n    result[user.role] = _utils.array.new()\n  end\n  table.insert(result[user.role], user)\nend\n\nreturn result",
+    "request_algorithm": "1. Read the source array at wf.vars.users.\n2. Create a new result object.\n3. Iterate through each element of the array.\n4. Use the {field} field as the grouping key.\n5. Update the group entry according to the requested aggregation logic.\n6. Return the grouped result object."
+  },
+  {
+    "request_text": "Посчитай сумму qty по всем позициям корзины",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"items\": [\n        {\"sku\": \"A\", \"qty\": 2},\n        {\"sku\": \"B\", \"qty\": 5},\n        {\"sku\": \"C\", \"qty\": 1}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local total = 0\n\nfor _, item in ipairs(wf.vars.items) do\n  total = total + item.qty\nend\n\nreturn total",
+    "request_algorithm": "1. Read the source array at wf.vars.items.\n2. Initialize an accumulator to zero.\n3. Iterate through each element of the array.\n4. For each relevant element, add the requested numeric field to the accumulator.\n5. Return the final accumulated total."
+  },
+  {
+    "request_text": "Найди первый товар с указанным sku",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"sku\": \"B\",\n      \"items\": [\n        {\"sku\": \"A\", \"qty\": 2},\n        {\"sku\": \"B\", \"qty\": 5},\n        {\"sku\": \"C\", \"qty\": 1}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "for _, item in ipairs(wf.vars.items) do\n  if item.sku == wf.vars.sku then\n    return item\n  end\nend\n\nreturn nil",
+    "request_algorithm": "1. Read the source array at wf.vars.items.\n2. Iterate through the array in order.\n3. For each element, check whether it matches the requested condition.\n4. Return the first matching element immediately.\n5. If no element matches, return nil."
+  },
+  {
+    "request_text": "Проверить, есть ли дубликаты в массиве ids",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"ids\": [101, 102, 103, 102]\n    }\n  }\n}",
+    "request_answer_example": "local seen = {}\n\nfor _, id in ipairs(wf.vars.ids) do\n  if seen[id] then\n    return true\n  end\n  seen[id] = true\nend\n\nreturn false",
+    "request_algorithm": "1. Read the array at wf.vars.ids.\n2. Create a lookup table for seen values.\n3. Iterate through the array.\n4. If the current value has already been seen, return true.\n5. Otherwise mark it as seen and continue.\n6. If the loop finishes without repeats, return false."
+  },
+  {
+    "request_text": "Удалить из массива tags пустые значения",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"tags\": [\"lua\", \"\", \"manual\", null, \"api\"]\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor _, tag in ipairs(wf.vars.tags) do\n  if tag ~= nil and tag ~= \"\" then\n    table.insert(result, tag)\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the array at wf.vars.tags.\n2. Create a new result array.\n3. Iterate through the source values in order.\n4. Append only values that are neither nil nor empty strings.\n5. Return the filtered array."
+  },
+  {
+    "request_text": "Развернуть массив numbers в обратном порядке",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"numbers\": [1, 2, 3, 4, 5]\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor i = #wf.vars.numbers, 1, -1 do\n  table.insert(result, wf.vars.numbers[i])\nend\n\nreturn result",
+    "request_algorithm": "1. Read the array at wf.vars.numbers.\n2. Create a new result array.\n3. Iterate through the source array from the last index down to the first index.\n4. Append each visited element to the result array in that reverse order.\n5. Return the reversed array."
+  },
+  {
+    "request_text": "Сделать плоский массив из вложенных массивов",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"groups\": [\n        [1, 2],\n        [3, 4],\n        [5]\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor _, group in ipairs(wf.vars.groups) do\n  for _, value in ipairs(group) do\n    table.insert(result, value)\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the nested array at wf.vars.groups.\n2. Create a new result array.\n3. Iterate through each inner array in order.\n4. Append every inner element to the flat result array.\n5. Return the flattened array."
+  },
+  {
+    "request_text": "Преобразовать массив строковых чисел в массив чисел",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"values\": [\"10\", \"20\", \"30\"]\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor _, value in ipairs(wf.vars.values) do\n  table.insert(result, tonumber(value))\nend\n\nreturn result",
+    "request_algorithm": "1. Read the source array at wf.vars.values.\n2. Create a new result array.\n3. Iterate through each string element.\n4. Convert each string to a number and append it to the result array.\n5. Return the numeric array."
+  },
+  {
+    "request_text": "Сделать map товаров в массив только из названий",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"products\": [\n        {\"name\": \"Book\", \"price\": 300},\n        {\"name\": \"Pen\", \"price\": 50}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor _, product in ipairs(wf.vars.products) do\n  table.insert(result, product.name)\nend\n\nreturn result",
+    "request_algorithm": "1. Read the source array at wf.vars.products.\n2. Create a new result array.\n3. Iterate through each element of the source array.\n4. For each element that satisfies the required condition, extract the requested field and append it to the result array.\n5. Return the mapped array."
+  },
+  {
+    "request_text": "Ограничить score диапазоном от 0 до 100",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"score\": 145\n    }\n  }\n}",
+    "request_answer_example": "return math.max(0, math.min(100, wf.vars.score))",
+    "request_algorithm": "1. Read the score at wf.vars.score.\n2. If the score is below the minimum boundary, use the minimum boundary.\n3. If the score is above the maximum boundary, use the maximum boundary.\n4. Otherwise keep the original score.\n5. Return the clamped result."
+  },
+  {
+    "request_text": "Вычислить длину гипотенузы по катетам a и b",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"a\": 3,\n      \"b\": 4\n    }\n  }\n}",
+    "request_answer_example": "return math.sqrt(wf.vars.a^2 + wf.vars.b^2)",
+    "request_algorithm": "1. Read the value at wf.vars.a.\n2. Read the value at wf.vars.b.\n3. Compute the square root of the sum of squares of the two catheti.\n4. Return the hypotenuse length."
+  },
+  {
+    "request_text": "Посчитать синус угла в радианах",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"angle\": 1.57079632679\n    }\n  }\n}",
+    "request_answer_example": "return math.sin(wf.vars.angle)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.angle.\n2. Compute the sine of that value.\n3. Return the result."
+  },
+  {
+    "request_text": "Посчитать косинус угла в радианах",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"angle\": 0\n    }\n  }\n}",
+    "request_answer_example": "return math.cos(wf.vars.angle)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.angle.\n2. Compute the sine of that value.\n3. Return the result."
+  },
+  {
+    "request_text": "Посчитать натуральный логарифм числа",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"value\": 10\n    }\n  }\n}",
+    "request_answer_example": "return math.log(wf.vars.value)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.value.\n2. Compute the natural logarithm of that value.\n3. Return the result."
+  },
+  {
+    "request_text": "Посчитать логарифм по основанию 10",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"value\": 1000\n    }\n  }\n}",
+    "request_answer_example": "return math.log(wf.vars.value, 10)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.value.\n2. Compute the base-10 logarithm of that value.\n3. Return the result."
+  },
+  {
+    "request_text": "Посчитать экспоненту e^x",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"x\": 2\n    }\n  }\n}",
+    "request_answer_example": "return math.exp(wf.vars.x)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.x.\n2. Compute the exponential value e raised to that number.\n3. Return the result."
+  },
+  {
+    "request_text": "Проверить, что значение является NaN",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"value\": 0/0\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.value ~= wf.vars.value",
+    "request_algorithm": "1. Read the numeric value at wf.vars.value.\n2. Compare the value with itself using standard equality semantics.\n3. Use the fact that NaN is not equal to itself.\n4. Return true when the value is NaN; otherwise return false."
+  },
+  {
+    "request_text": "Разбить количество секунд на часы, минуты и секунды",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"seconds\": 3665\n    }\n  }\n}",
+    "request_answer_example": "local total = wf.vars.seconds\nlocal hours = math.floor(total / 3600)\nlocal minutes = math.floor((total % 3600) / 60)\nlocal seconds = total % 60\n\nreturn {\n  hours = hours,\n  minutes = minutes,\n  seconds = seconds\n}",
+    "request_algorithm": "1. Read the total number of seconds at wf.vars.seconds.\n2. Compute the whole hours by dividing by 3600 and rounding down.\n3. Compute the remaining whole minutes from the leftover seconds after removing full hours.\n4. Compute the remaining seconds after removing full hours and full minutes.\n5. Place hours, minutes, and seconds into a result table.\n6. Return that result table."
+  },
+  {
+    "request_text": "Найти позицию второго UTF-8 символа",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"text\": \"Привет\"\n    }\n  }\n}",
+    "request_answer_example": "return utf8.offset(wf.vars.text, 2)",
+    "request_algorithm": "1. Read the UTF-8 string at wf.vars.text.\n2. Find the byte offset of the second UTF-8 character in that string.\n3. Return the resulting position."
+  },
+  {
+    "request_text": "Проверить, является ли строка корректным UTF-8",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"text\": \"Привет\"\n    }\n  }\n}",
+    "request_answer_example": "return utf8.len(wf.vars.text) ~= nil",
+    "request_algorithm": "1. Read the string at wf.vars.text.\n2. Attempt to count its UTF-8 characters.\n3. Check whether the UTF-8 count operation succeeds and returns a non-nil result.\n4. Return true when the string is valid UTF-8; otherwise return false."
+  },
+  {
+    "request_text": "Получить Unicode codepoint первого UTF-8 символа",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"text\": \"Жук\"\n    }\n  }\n}",
+    "request_answer_example": "return utf8.codepoint(wf.vars.text, 1, 2)",
+    "request_algorithm": "1. Read the UTF-8 string at wf.vars.text.\n2. Determine the first UTF-8 character boundary.\n3. Read the Unicode codepoint of the first UTF-8 character.\n4. Return that codepoint value."
+  },
+  {
+    "request_text": "Разобрать unix timestamp в таблицу даты UTC",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"timestamp\": 1700000000\n    }\n  }\n}",
+    "request_answer_example": "return os.date(\"!*t\", wf.vars.timestamp)",
+    "request_algorithm": "1. Read the Unix timestamp at wf.vars.timestamp.\n2. Convert that timestamp to a UTC date table.\n3. Return the resulting table."
+  },
+  {
+    "request_text": "Собрать unix timestamp из таблицы даты",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"date\": {\n        \"year\": 2025,\n        \"month\": 5,\n        \"day\": 10,\n        \"hour\": 14,\n        \"min\": 30,\n        \"sec\": 0\n      }\n    }\n  }\n}",
+    "request_answer_example": "return os.time(wf.vars.date)",
+    "request_algorithm": "1. Read the date table at wf.vars.date.\n2. Convert that date table to a Unix timestamp.\n3. Return the resulting timestamp."
+  },
+  {
+    "request_text": "Получить номер дня недели для заданного timestamp",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"timestamp\": 1700000000\n    }\n  }\n}",
+    "request_answer_example": "local t = os.date(\"*t\", wf.vars.timestamp)\nreturn t.wday",
+    "request_algorithm": "1. Read the Unix timestamp at wf.vars.timestamp.\n2. Convert the timestamp to a date table in local time.\n3. Extract the wday field from that table.\n4. Return the weekday number."
+  },
+  {
+    "request_text": "Получить номер дня года для заданного timestamp",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"timestamp\": 1700000000\n    }\n  }\n}",
+    "request_answer_example": "local t = os.date(\"*t\", wf.vars.timestamp)\nreturn t.yday",
+    "request_algorithm": "1. Read the Unix timestamp at wf.vars.timestamp.\n2. Convert the timestamp to a date table in local time.\n3. Extract the yday field from that table.\n4. Return the day-of-year number."
+  },
+  {
+    "request_text": "Создай временный файл и запиши в него JSON",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"payload\": \"{\"ok\":true}\"\n    }\n  }\n}",
+    "request_answer_example": "local name = os.tmpname()\nlocal file = assert(io.open(name, \"w\"))\nfile:write(wf.vars.payload)\nfile:close()\nreturn name",
+    "request_algorithm": "1. Read the JSON payload at wf.vars.payload.\n2. Request a unique temporary file name from the operating system.\n3. Open that file for writing.\n4. Write the JSON payload into the file.\n5. Close the file handle.\n6. Return the temporary file name."
+  },
+  {
+    "request_text": "Перенаправь стандартный вывод в файл через io.output",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/out.txt\",\n      \"message\": \"hello\"\n    }\n  }\n}",
+    "request_answer_example": "local file = assert(io.open(wf.vars.filePath, \"w\"))\nio.output(file)\nio.write(wf.vars.message)\nfile:close()\nreturn true",
+    "request_algorithm": "1. Read the message at wf.vars.filePath.\n2. Write that message to standard output.\n3. Return true."
+  },
+  {
+    "request_text": "Считать число из файла в виде number",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/num.txt\"\n    }\n  }\n}",
+    "request_answer_example": "local file = assert(io.open(wf.vars.filePath, \"r\"))\nlocal value = file:read(\"*n\")\nfile:close()\nreturn value",
+    "request_algorithm": "1. Read the file path at wf.vars.filePath.\n2. Open the file for reading.\n3. Read one numeric value from the file as a number.\n4. Close the file handle.\n5. Return the numeric value."
+  },
+  {
+    "request_text": "Получить путь загрузчика через package.config",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "return package.config",
+    "request_algorithm": "1. Read the current Lua package.config value.\n2. Return that configuration string."
+  },
+  {
+    "request_text": "Добавить собственную директорию в package.path",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dir\": \"/opt/lua_modules\"\n    }\n  }\n}",
+    "request_answer_example": "package.path = package.path .. \";\" .. wf.vars.dir .. \"/?.lua\"\nreturn package.path",
+    "request_algorithm": "1. Read the current Lua package.path value.\n2. Return that path string."
+  },
+  {
+    "request_text": "Загрузить модуль json через require",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"module_name\": \"json\"\n    }\n  }\n}",
+    "request_answer_example": "local module = require(wf.vars.module_name)\nreturn module ~= nil",
+    "request_algorithm": "1. Read the module name at wf.vars.module_name.\n2. Load the module with require.\n3. Check whether the loaded module value is not nil.\n4. Return the boolean result."
+  },
+  {
+    "request_text": "Скомпилировать функцию из строки без немедленного запуска",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"code\": \"return function(x) return x * 2 end\"\n    }\n  }\n}",
+    "request_answer_example": "local chunk = assert(load(wf.vars.code))\nlocal fn = chunk()\nreturn fn(21)",
+    "request_algorithm": "1. Read the code string at wf.vars.code.\n2. Compile that string into a Lua chunk without executing the final target function immediately.\n3. Execute the compiled chunk once to obtain the returned function value.\n4. Call the obtained function with the required argument.\n5. Return the function result."
+  },
+  {
+    "request_text": "Создай счетчик через замыкание и вызови его три раза",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"start\": 5\n    }\n  }\n}",
+    "request_answer_example": "local function makeCounter(start)\n  local value = start\n  return function()\n    value = value + 1\n    return value\n  end\nend\n\nlocal counter = makeCounter(wf.vars.start)\n\nreturn {\n  first = counter(),\n  second = counter(),\n  third = counter()\n}",
+    "request_algorithm": "1. Read the start value at wf.vars.start.\n2. Define a counter factory that closes over an internal mutable value.\n3. Create one counter instance from that factory using the start value.\n4. Call the counter three times in sequence so the internal state advances on each call.\n5. Store the three returned values under first, second, and third.\n6. Return the result table."
+  },
+  {
+    "request_text": "Создай функцию умножения на коэффициент через closure",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"factor\": 3,\n      \"value\": 7\n    }\n  }\n}",
+    "request_answer_example": "local function makeMultiplier(factor)\n  return function(value)\n    return value * factor\n  end\nend\n\nlocal mul = makeMultiplier(wf.vars.factor)\nreturn mul(wf.vars.value)",
+    "request_algorithm": "1. Read the factor at wf.vars.factor.\n2. Read the input value at wf.vars.value.\n3. Define a function factory that closes over the factor and returns a multiplier function.\n4. Create the multiplier function from the given factor.\n5. Call the multiplier with the input value.\n6. Return the multiplication result."
+  },
+  {
+    "request_text": "Посчитай факториал числа рекурсивно",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"n\": 5\n    }\n  }\n}",
+    "request_answer_example": "local function fact(n)\n  if n <= 1 then\n    return 1\n  end\n  return n * fact(n - 1)\nend\n\nreturn fact(wf.vars.n)",
+    "request_algorithm": "1. Read the integer value at wf.vars.n.\n2. Define a recursive factorial function.\n3. In the base case, return 1 when the input is less than or equal to 1.\n4. In the recursive case, multiply the current number by the factorial of the previous number.\n5. Call the recursive function with the source value.\n6. Return the factorial result."
+  },
+  {
+    "request_text": "Посчитай сумму вложенной структуры чисел рекурсивно",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"data\": [1, [2, 3], [4, [5]]]\n    }\n  }\n}",
+    "request_answer_example": "local function sumNested(value)\n  if type(value) == \"number\" then\n    return value\n  end\n\n  local total = 0\n  if type(value) == \"table\" then\n    for _, v in ipairs(value) do\n      total = total + sumNested(v)\n    end\n  end\n\n  return total\nend\n\nreturn sumNested(wf.vars.data)",
+    "request_algorithm": "1. Read the required numeric values.\n2. Add them together.\n3. Return the sum."
+  },
+  {
+    "request_text": "Запрети изменение таблицы settings через __newindex",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"settings\": {\n        \"env\": \"prod\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local settings = wf.vars.settings\n\nsetmetatable(settings, {\n  __newindex = function()\n    error(\"settings are read-only\")\n  end\n})\n\nlocal ok, err = pcall(function()\n  settings.theme = \"dark\"\nend)\n\nif ok then\n  return true\nend\n\nreturn err",
+    "request_algorithm": "1. Read the value at wf.vars.settings.\n2. Execute the division logic inside protected call handling.\n3. Inside that protected logic, raise an error when the divisor is zero.\n4. If the protected call succeeds, return the numeric division result.\n5. If the protected call fails, return the error text instead."
+  },
+  {
+    "request_text": "Сделай сложение двух money-объектов через __add",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"m1\": {\"amount\": 150},\n      \"m2\": {\"amount\": 200}\n    }\n  }\n}",
+    "request_answer_example": "local mt = {\n  __add = function(a, b)\n    return { amount = a.amount + b.amount }\n  end\n}\n\nlocal m1 = wf.vars.m1\nlocal m2 = wf.vars.m2\n\nsetmetatable(m1, mt)\nsetmetatable(m2, mt)\n\nlocal total = m1 + m2\nreturn total.amount",
+    "request_algorithm": "1. Read the first money object at wf.vars.m1.\n2. Read the second money object at wf.vars.m2.\n3. Create metatable logic that defines addition for two money objects by summing their amount fields.\n4. Attach that metatable to both money objects.\n5. Add the two objects with the + operator.\n6. Extract the amount field from the resulting object.\n7. Return the summed amount."
+  },
+  {
+    "request_text": "Сделай сравнение двух версий через __lt",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"v1\": {\"major\": 1, \"minor\": 2},\n      \"v2\": {\"major\": 1, \"minor\": 5}\n    }\n  }\n}",
+    "request_answer_example": "local mt = {\n  __lt = function(a, b)\n    if a.major ~= b.major then\n      return a.major < b.major\n    end\n    return a.minor < b.minor\n  end\n}\n\nlocal v1 = wf.vars.v1\nlocal v2 = wf.vars.v2\n\nsetmetatable(v1, mt)\nsetmetatable(v2, mt)\n\nreturn v1 < v2",
+    "request_algorithm": "1. Read the first version object at wf.vars.v1.\n2. Read the second version object at wf.vars.v2.\n3. Create metatable logic that defines less-than comparison by major first and minor second.\n4. Attach that metatable to both version objects.\n5. Compare the two objects with the < operator.\n6. Return the boolean comparison result."
+  },
+  {
+    "request_text": "Сделай вычисление длины объекта range через __len",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"range\": {\"from\": 10, \"to\": 25}\n    }\n  }\n}",
+    "request_answer_example": "local range = wf.vars.range\n\nsetmetatable(range, {\n  __len = function(obj)\n    return obj.to - obj.from + 1\n  end\n})\n\nreturn #range",
+    "request_algorithm": "1. Read the range object at wf.vars.range.\n2. Attach a metatable that defines the __len operation for the object.\n3. In the __len handler, compute the inclusive length as to minus from plus one.\n4. Apply the length operator to the object.\n5. Return the computed length."
+  },
+  {
+    "request_text": "Сделай унарный минус для объекта vector через __unm",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"vector\": {\"x\": 3, \"y\": -4}\n    }\n  }\n}",
+    "request_answer_example": "local vector = wf.vars.vector\n\nsetmetatable(vector, {\n  __unm = function(obj)\n    return { x = -obj.x, y = -obj.y }\n  end\n})\n\nlocal result = -vector\nreturn result",
+    "request_algorithm": "1. Read the vector object at wf.vars.vector.\n2. Attach a metatable that defines unary minus for the vector.\n3. In the __unm handler, create a new object with both coordinates negated.\n4. Apply the unary minus operator to the vector.\n5. Return the resulting vector object."
+  },
+  {
+    "request_text": "Создай собственный итератор чисел от 1 до n",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"n\": 5\n    }\n  }\n}",
+    "request_answer_example": "local function range(n)\n  local i = 0\n  return function()\n    i = i + 1\n    if i <= n then\n      return i\n    end\n  end\nend\n\nlocal result = _utils.array.new()\n\nfor value in range(wf.vars.n) do\n  table.insert(result, value)\nend\n\nreturn result",
+    "request_algorithm": "1. Read the upper bound at wf.vars.n.\n2. Define a custom iterator function that keeps internal iteration state.\n3. On each iterator call, increment the state and yield the next number while it does not exceed the bound.\n4. Create a new result array.\n5. Iterate through the custom iterator and append each produced number to the result array.\n6. Return the collected array."
+  },
+  {
+    "request_text": "Пройти по массиву через ipairs и вернуть пары индекс-значение",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"items\": [\"A\", \"B\", \"C\"]\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor i, value in ipairs(wf.vars.items) do\n  table.insert(result, { index = i, value = value })\nend\n\nreturn result",
+    "request_algorithm": "1. Read the array at wf.vars.items.\n2. Create a new result array.\n3. Iterate through the source array with ipairs so index order is preserved.\n4. For each element, create an object containing its index and value.\n5. Append each object to the result array.\n6. Return the result array."
+  },
+  {
+    "request_text": "Пройти по объекту через pairs и собрать строки key=value",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"headers\": {\n        \"Accept\": \"application/json\",\n        \"Host\": \"example.com\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor key, value in pairs(wf.vars.headers) do\n  table.insert(result, key .. \"=\" .. tostring(value))\nend\n\nreturn result",
+    "request_algorithm": "1. Read the object at wf.vars.headers.\n2. Create a new result array.\n3. Iterate through all key-value pairs of the object with pairs.\n4. Convert each pair into a string in the exact format key=value.\n5. Append each formatted string to the result array.\n6. Return the result array."
+  },
+  {
+    "request_text": "Сделай генератор значений из массива через coroutine.wrap",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"items\": [\"red\", \"green\", \"blue\"]\n    }\n  }\n}",
+    "request_answer_example": "local iter = coroutine.wrap(function()\n  for _, item in ipairs(wf.vars.items) do\n    coroutine.yield(item)\n  end\nend)\n\nreturn {\n  first = iter(),\n  second = iter(),\n  third = iter()\n}",
+    "request_algorithm": "1. Read the array at wf.vars.items.\n2. Create a wrapped coroutine generator that yields each array element in order.\n3. Call the wrapped generator three times.\n4. Store the three received values under first, second, and third.\n5. Return the result table."
+  },
+  {
+    "request_text": "Передай значение в coroutine после yield",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local co = coroutine.create(function()\n  local name = coroutine.yield(\"awaiting_name\")\n  return \"hello \" .. tostring(name)\nend)\n\nlocal _, first = coroutine.resume(co)\nlocal _, second = coroutine.resume(co, \"Lua\")\n\nreturn {\n  first = first,\n  second = second\n}",
+    "request_algorithm": "1. Create a coroutine whose first resume yields a marker asking for a name.\n2. Resume the coroutine the first time and capture the yielded marker value.\n3. Resume the coroutine a second time while passing the name value \"Lua\".\n4. Inside the coroutine, combine the received name with the greeting prefix.\n5. Store the first yielded value and the final returned value in a result table.\n6. Return that result table."
+  },
+  {
+    "request_text": "Получить значение локальной переменной через debug.getlocal",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local function sample()\n  local x = 42\n  local name, value = debug.getlocal(1, 1)\n  return {\n    name = name,\n    value = value\n  }\nend\n\nreturn sample()",
+    "request_algorithm": "1. Define the sample function that creates a local variable x.\n2. Inside that function, read the first local variable of the current stack frame with debug.getlocal.\n3. Capture both the local variable name and its value.\n4. Place them into a result table.\n5. Return the result table from the sample function."
+  },
+  {
+    "request_text": "Изменить локальную переменную через debug.setlocal",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local function sample()\n  local x = 10\n  debug.setlocal(1, 1, 99)\n  return x\nend\n\nreturn sample()",
+    "request_algorithm": "1. Define the sample function that creates a local variable x.\n2. Inside that function, replace the first local variable of the current stack frame with debug.setlocal.\n3. Read the local variable again through normal access.\n4. Return the updated local variable value from the sample function."
+  },
+  {
+    "request_text": "Прочитать upvalue функции через debug.getupvalue",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local state = \"ready\"\n\nlocal function worker()\n  return state\nend\n\nlocal name, value = debug.getupvalue(worker, 1)\nreturn {\n  name = name,\n  value = value\n}",
+    "request_algorithm": "1. Read or create the target closure at the function with upvalues.\n2. Use debug.getupvalue to read the first upvalue name and its current value.\n3. Place the name and value into a result table.\n4. Return that table."
+  },
+  {
+    "request_text": "Изменить upvalue функции через debug.setupvalue",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local state = \"ready\"\n\nlocal function worker()\n  return state\nend\n\ndebug.setupvalue(worker, 1, \"done\")\nreturn worker()",
+    "request_algorithm": "1. Read or create the target closure at the function with upvalues.\n2. Use debug.getupvalue to read the first upvalue name and its current value.\n3. Place the name and value into a result table.\n4. Return that table."
+  },
+  {
+    "request_text": "Прочитать поле x через rawget, игнорируя __index",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"obj\": {}\n    }\n  }\n}",
+    "request_answer_example": "local obj = wf.vars.obj\nsetmetatable(obj, {\n  __index = function()\n    return 100\n  end\n})\n\nreturn rawget(obj, \"x\")",
+    "request_algorithm": "1. Read the object at wf.vars.obj.\n2. Attach a metatable with an __index fallback that would return a synthetic value for missing fields.\n3. Read the x field with rawget so the __index fallback is ignored.\n4. Return the raw field value."
+  },
+  {
+    "request_text": "Установить поле x через rawset, минуя __newindex",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"obj\": {}\n    }\n  }\n}",
+    "request_answer_example": "local obj = wf.vars.obj\nsetmetatable(obj, {\n  __newindex = function()\n    error(\"blocked\")\n  end\n})\n\nrawset(obj, \"x\", 5)\nreturn obj.x",
+    "request_algorithm": "1. Read the object at wf.vars.obj.\n2. Attach a metatable with an __newindex handler that would block normal assignment.\n3. Set the x field with rawset so the __newindex handler is bypassed.\n4. Read obj.x normally.\n5. Return the stored value."
+  },
+  {
+    "request_text": "Преобразовать число в строку с двумя знаками после запятой",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"price\": 12.5\n    }\n  }\n}",
+    "request_answer_example": "return string.format(\"%.2f\", wf.vars.price)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.price.\n2. Format the number as a string with exactly two digits after the decimal point.\n3. Return the formatted string."
+  },
+  {
+    "request_text": "Преобразовать шестнадцатеричную строку FF в число",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"hex\": \"0xFF\"\n    }\n  }\n}",
+    "request_answer_example": "return tonumber(wf.vars.hex)",
+    "request_algorithm": "1. Read the hexadecimal string at wf.vars.hex.\n2. Convert that string to a number with Lua numeric conversion.\n3. Return the numeric result."
+  },
+  {
+    "request_text": "Получить первый аргумент командной строки из arg",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"arg\": [\"input.txt\", \"output.txt\"]\n    }\n  }\n}",
+    "request_answer_example": "local arg = wf.vars.arg\nreturn arg[1]",
+    "request_algorithm": "1. Read the command-line argument array at wf.vars.arg.\n2. Access the first argument at index 1.\n3. Return that argument."
+  },
+  {
+    "request_text": "Собрать все аргументы командной строки в одну строку",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"arg\": [\"build\", \"--prod\", \"--verbose\"]\n    }\n  }\n}",
+    "request_answer_example": "local arg = wf.vars.arg\nreturn table.concat(arg, \" \")",
+    "request_algorithm": "1. Read the command-line argument array at wf.vars.arg.\n2. Concatenate all arguments in array order with a single space separator.\n3. Return the joined string."
+  },
+  {
+    "request_text": "Остановить сборщик мусора",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "collectgarbage(\"stop\")\nreturn true",
+    "request_algorithm": "1. Send the \"stop\" command to the Lua garbage collector.\n2. Return true after the command is issued."
+  },
+  {
+    "request_text": "Перезапустить сборщик мусора",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "collectgarbage(\"restart\")\nreturn true",
+    "request_algorithm": "1. Send the \"restart\" command to the Lua garbage collector.\n2. Return true after the command is issued."
+  },
+  {
+    "request_text": "Преобразовать число в шестнадцатеричную строку",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"value\": 255\n    }\n  }\n}",
+    "request_answer_example": "return string.format(\"%X\", wf.vars.value)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.value.\n2. Format the number as an uppercase hexadecimal string.\n3. Return the formatted string."
+  },
+  {
+    "request_text": "Преобразовать число в научную нотацию",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"value\": 1234567\n    }\n  }\n}",
+    "request_answer_example": "return string.format(\"%e\", wf.vars.value)",
+    "request_algorithm": "1. Read the numeric value at wf.vars.value.\n2. Format the number in scientific notation.\n3. Return the formatted string."
+  },
+  {
+    "request_text": "Вернуть статус заказа paid, pending или failed по полям is_paid и has_error",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"is_paid\": false,\n      \"has_error\": false\n    }\n  }\n}",
+    "request_answer_example": "if wf.vars.has_error then\n  return \"failed\"\nelseif wf.vars.is_paid then\n  return \"paid\"\nelse\n  return \"pending\"\nend",
+    "request_algorithm": "1. Read the error flag at wf.vars.has_error.\n2. Read the paid flag at wf.vars.is_paid.\n3. If the error flag is true, return \"failed\".\n4. Otherwise, if the paid flag is true, return \"paid\".\n5. Otherwise return \"pending\"."
+  },
+  {
+    "request_text": "Выбрать первый непустой телефон из mobile, work_phone, home_phone",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"mobile\": \"\",\n      \"work_phone\": null,\n      \"home_phone\": \"+7 900 000 00 00\"\n    }\n  }\n}",
+    "request_answer_example": "local candidates = { wf.vars.mobile, wf.vars.work_phone, wf.vars.home_phone }\n\nfor _, phone in ipairs(candidates) do\n  if phone ~= nil and phone ~= \"\" then\n    return phone\n  end\nend\n\nreturn nil",
+    "request_algorithm": "1. Read the candidate phone values wf.vars.mobile, wf.vars.work_phone, and wf.vars.home_phone.\n2. Put the candidates into a list in that exact priority order.\n3. Iterate through the candidate list from left to right.\n4. Return the first value that is neither nil nor an empty string.\n5. If no candidate is non-empty, return nil."
+  },
+  {
+    "request_text": "Найти максимальную цену среди товаров и вернуть сам товар",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"products\": [\n        {\"name\": \"A\", \"price\": 100},\n        {\"name\": \"B\", \"price\": 350},\n        {\"name\": \"C\", \"price\": 280}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local best = nil\n\nfor _, product in ipairs(wf.vars.products) do\n  if best == nil or product.price > best.price then\n    best = product\n  end\nend\n\nreturn best",
+    "request_algorithm": "1. Read the product array at wf.vars.products.\n2. Initialize the current best product as nil.\n3. Iterate through the product array in order.\n4. If no best product has been chosen yet, or if the current product price is greater than the best product price, replace the best product.\n5. After the loop finishes, return the best product object."
+  },
+  {
+    "request_text": "Сформировать объект summary с количеством товаров и общей суммой",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"items\": [\n        {\"price\": 100, \"qty\": 2},\n        {\"price\": 50, \"qty\": 1}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local count = 0\nlocal total = 0\n\nfor _, item in ipairs(wf.vars.items) do\n  count = count + 1\n  total = total + item.price * item.qty\nend\n\nreturn {\n  count = count,\n  total = total\n}",
+    "request_algorithm": "1. Read the item array at wf.vars.items.\n2. Initialize a count accumulator to zero.\n3. Initialize a total accumulator to zero.\n4. Iterate through each item in the array.\n5. Increase the count for each item.\n6. Add item.price multiplied by item.qty to the total accumulator.\n7. Return an object with fields count and total."
+  },
+  {
+    "request_text": "Преобразовать объект query_params в строку URL query",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"query_params\": {\n        \"page\": \"2\",\n        \"limit\": \"20\",\n        \"sort\": \"name\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local parts = _utils.array.new()\n\nfor key, value in pairs(wf.vars.query_params) do\n  table.insert(parts, key .. \"=\" .. tostring(value))\nend\n\nreturn table.concat(parts, \"&\")",
+    "request_algorithm": "1. Read the object at wf.vars.query_params.\n2. Create a new array of query-string parts.\n3. Iterate through each key-value pair in the object.\n4. Convert each pair into a string in the exact format key=value.\n5. Append each formatted part to the parts array.\n6. Join all parts with the \"&\" separator.\n7. Return the resulting query string."
+  },
+  {
+    "request_text": "Преобразовать массив key=value строк в объект",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"pairs_list\": [\n        \"host=example.com\",\n        \"port=443\",\n        \"secure=true\"\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = {}\n\nfor _, item in ipairs(wf.vars.pairs_list) do\n  local key, value = string.match(item, \"^([^=]+)=(.*)$\")\n  result[key] = value\nend\n\nreturn result",
+    "request_algorithm": "1. Read the array at wf.vars.pairs_list.\n2. Create a new result object.\n3. Iterate through each string in the array.\n4. Split each string into the part before the first \"=\" and the part after it.\n5. Use the left part as the key and the right part as the value in the result object.\n6. Return the constructed object."
+  },
+  {
+    "request_text": "Сделай глубокий обход таблицы и собери все строковые значения",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"data\": {\n        \"name\": \"Ivan\",\n        \"meta\": {\n          \"city\": \"Moscow\",\n          \"roles\": [\"admin\", \"editor\"]\n        }\n      }\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nlocal function walk(value)\n  if type(value) == \"string\" then\n    table.insert(result, value)\n  elseif type(value) == \"table\" then\n    for _, v in pairs(value) do\n      walk(v)\n    end\n  end\nend\n\nwalk(wf.vars.data)\nreturn result",
+    "request_algorithm": "1. Read the root value at wf.vars.data.\n2. Create a new result array for collected strings.\n3. Define recursive helper logic that processes one value at a time.\n4. If the current value is a string, append it to the result array.\n5. If the current value is a table, iterate through all of its child values and recursively process each one.\n6. Start the recursive walk from the root value.\n7. Return the collected array of string values."
+  },
+  {
+    "request_text": "Сделай глубокую копию простой таблицы без циклических ссылок",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"config\": {\n        \"name\": \"app\",\n        \"options\": {\n          \"debug\": true\n        }\n      }\n    }\n  }\n}",
+    "request_answer_example": "local function deepcopy(value)\n  if type(value) ~= \"table\" then\n    return value\n  end\n\n  local copy = {}\n  for k, v in pairs(value) do\n    copy[deepcopy(k)] = deepcopy(v)\n  end\n  return copy\nend\n\nreturn deepcopy(wf.vars.config)",
+    "request_algorithm": "1. Read the source table at wf.vars.config.\n2. Define recursive helper logic for deep copying.\n3. If the current value is not a table, return it unchanged.\n4. If the current value is a table, create a new empty table for the copy.\n5. Recursively copy every key and every value from the source table into the new table.\n6. Return the fully copied table for the root input."
+  },
+  {
+    "request_text": "Слить два объекта, приоритет у второго",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"defaults\": {\n        \"lang\": \"ru\",\n        \"theme\": \"light\"\n      },\n      \"overrides\": {\n        \"theme\": \"dark\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local result = {}\n\nfor k, v in pairs(wf.vars.defaults) do\n  result[k] = v\nend\n\nfor k, v in pairs(wf.vars.overrides) do\n  result[k] = v\nend\n\nreturn result",
+    "request_algorithm": "1. Read the defaults object at wf.vars.defaults.\n2. Read the overrides object at wf.vars.overrides.\n3. Create a new result object.\n4. Copy all fields from defaults into the result object.\n5. Copy all fields from overrides into the same result object so matching keys replace previous values.\n6. Return the merged result object."
+  },
+  {
+    "request_text": "Оставить только уникальные строки в массиве tags, сохранив порядок",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"tags\": [\"lua\", \"api\", \"lua\", \"json\", \"api\"]\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\nlocal seen = {}\n\nfor _, tag in ipairs(wf.vars.tags) do\n  if not seen[tag] then\n    seen[tag] = true\n    table.insert(result, tag)\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the array at wf.vars.tags.\n2. Create a new result array.\n3. Create a lookup table for values that have already been seen.\n4. Iterate through the source array in order.\n5. For each tag, if it has not been seen before, mark it as seen and append it to the result array.\n6. Return the unique tags array while preserving original order."
+  },
+  {
+    "request_text": "Выровняй число order_id слева нулями до 8 символов",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"order_id\": 125\n    }\n  }\n}",
+    "request_answer_example": "return string.format(\"%08d\", wf.vars.order_id)",
+    "request_algorithm": "1. Read the numeric order identifier at wf.vars.order_id.\n2. Format that number as a decimal string of width 8.\n3. Fill missing leading positions with zeros.\n4. Return the padded string."
+  },
+  {
+    "request_text": "Собери денежную сумму с валютой через string.format",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"amount\": 1540.5,\n      \"currency\": \"RUB\"\n    }\n  }\n}",
+    "request_answer_example": "return string.format(\"%.2f %s\", wf.vars.amount, wf.vars.currency)",
+    "request_algorithm": "1. Read the value at wf.vars.amount.\n2. Read the value at wf.vars.currency.\n3. Construct the output string with the required string.format template.\n4. Insert the source values into the template in the correct order.\n5. Return the formatted string."
+  },
+  {
+    "request_text": "Заменить табы и переводы строк в тексте на один пробел",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"text\": \"line1\\nline2\\tline3\"\n    }\n  }\n}",
+    "request_answer_example": "local result = string.gsub(wf.vars.text, \"[\\n\\r\\t]+\", \" \")\nresult = string.gsub(result, \"%s+\", \" \")\nreturn result",
+    "request_algorithm": "1. Read the text at wf.vars.text.\n2. Replace every run of newline, carriage-return, or tab characters with a single space.\n3. Normalize any remaining repeated whitespace to a single space.\n4. Return the cleaned text."
+  },
+  {
+    "request_text": "Проверить, что логин содержит только буквы, цифры и подчеркивание",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"login\": \"user_2025\"\n    }\n  }\n}",
+    "request_answer_example": "return wf.vars.login:match(\"^[%a%d_]+$\") ~= nil",
+    "request_algorithm": "1. Read the login string at wf.vars.login.\n2. Check whether the entire string matches a pattern that allows only letters, digits, and underscores.\n3. Return the boolean result."
+  },
+  {
+    "request_text": "Извлечь имя файла без пути из полного filePath",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/var/data/reports/monthly.csv\"\n    }\n  }\n}",
+    "request_answer_example": "return string.match(wf.vars.filePath, \"([^/\\\\]+)$\")",
+    "request_algorithm": "1. Read the full path string at wf.vars.filePath.\n2. Match the last path segment after the final slash or backslash.\n3. Return the extracted file name."
+  },
+  {
+    "request_text": "Разделить full_name на имя и фамилию",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"full_name\": \"Ivan Petrov\"\n    }\n  }\n}",
+    "request_answer_example": "local first, last = string.match(wf.vars.full_name, \"^(%S+)%s+(.+)$\")\nreturn {\n  first_name = first,\n  last_name = last\n}",
+    "request_algorithm": "1. Read the full name string at wf.vars.full_name.\n2. Split the string into the first non-space token and the remaining text after the first whitespace separator.\n3. Place the first token into first_name and the remainder into last_name.\n4. Return the result table."
+  },
+  {
+    "request_text": "Построить словарь количества товаров по category",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"products\": [\n        {\"name\": \"Book\", \"category\": \"books\"},\n        {\"name\": \"Pen\", \"category\": \"office\"},\n        {\"name\": \"Notebook\", \"category\": \"office\"}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = {}\n\nfor _, product in ipairs(wf.vars.products) do\n  result[product.category] = (result[product.category] or 0) + 1\nend\n\nreturn result",
+    "request_algorithm": "1. Read the source array at wf.vars.products.\n2. Create a new result object.\n3. Iterate through each element of the array.\n4. Use the {field} field as the grouping key.\n5. Update the group entry according to the requested aggregation logic.\n6. Return the grouped result object."
+  },
+  {
+    "request_text": "Преобразовать массив пользователей в объект по id",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"users\": [\n        {\"id\": 1, \"name\": \"Ivan\"},\n        {\"id\": 2, \"name\": \"Anna\"}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = {}\n\nfor _, user in ipairs(wf.vars.users) do\n  result[user.id] = user\nend\n\nreturn result",
+    "request_algorithm": "1. Read the source array at wf.vars.users.\n2. Create a new result object.\n3. Iterate through each element of the array.\n4. Use each element's {key} field as the key in the result object and store the whole element as the value.\n5. Return the result object."
+  },
+  {
+    "request_text": "Собрать только активных пользователей",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"users\": [\n        {\"name\": \"Ivan\", \"is_active\": true},\n        {\"name\": \"Anna\", \"is_active\": false},\n        {\"name\": \"Olga\", \"is_active\": true}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor _, user in ipairs(wf.vars.users) do\n  if user.is_active then\n    table.insert(result, user)\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the user array at wf.vars.users.\n2. Create a new result array.\n3. Iterate through each user in the source array.\n4. Keep only users whose is_active field is true.\n5. Append each matching user object to the result array.\n6. Return the filtered array."
+  },
+  {
+    "request_text": "Собрать массив SKU только для товаров с qty больше 0",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"items\": [\n        {\"sku\": \"A\", \"qty\": 1},\n        {\"sku\": \"B\", \"qty\": 0},\n        {\"sku\": \"C\", \"qty\": 4}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nfor _, item in ipairs(wf.vars.items) do\n  if item.qty > 0 then\n    table.insert(result, item.sku)\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the source array at wf.vars.items.\n2. Create a new result array.\n3. Iterate through each element of the source array.\n4. For each element that satisfies the required condition, extract the requested field and append it to the result array.\n5. Return the mapped array."
+  },
+  {
+    "request_text": "Разбить массив чисел на четные и нечетные",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"numbers\": [1, 2, 3, 4, 5, 6]\n    }\n  }\n}",
+    "request_answer_example": "local result = {\n  even = _utils.array.new(),\n  odd = _utils.array.new()\n}\n\nfor _, value in ipairs(wf.vars.numbers) do\n  if value % 2 == 0 then\n    table.insert(result.even, value)\n  else\n    table.insert(result.odd, value)\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the numeric array at wf.vars.numbers.\n2. Create one result array for even numbers and another for odd numbers.\n3. Iterate through the source array in order.\n4. Append each value to the appropriate result array based on parity.\n5. Return both arrays inside a result object."
+  },
+  {
+    "request_text": "Найти пересечение двух массивов строк",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"left\": [\"lua\", \"json\", \"xml\"],\n      \"right\": [\"json\", \"yaml\", \"lua\"]\n    }\n  }\n}",
+    "request_answer_example": "local seen = {}\nlocal result = _utils.array.new()\n\nfor _, value in ipairs(wf.vars.left) do\n  seen[value] = true\nend\n\nfor _, value in ipairs(wf.vars.right) do\n  if seen[value] then\n    table.insert(result, value)\n    seen[value] = nil\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the left-hand array at wf.vars.left.\n2. Read the right-hand array at wf.vars.right.\n3. Build a lookup table from the left-hand array for fast membership checks.\n4. Iterate through the right-hand array in order.\n5. For each value that exists in the lookup, append it to the result and mark it as already used.\n6. Return the resulting intersection array."
+  },
+  {
+    "request_text": "Найти элементы, которые есть в left, но отсутствуют в right",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"left\": [\"lua\", \"json\", \"xml\"],\n      \"right\": [\"json\", \"yaml\"]\n    }\n  }\n}",
+    "request_answer_example": "local rightSet = {}\nlocal result = _utils.array.new()\n\nfor _, value in ipairs(wf.vars.right) do\n  rightSet[value] = true\nend\n\nfor _, value in ipairs(wf.vars.left) do\n  if not rightSet[value] then\n    table.insert(result, value)\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the value at wf.vars.right.\n2. Read the value at wf.vars.left.\n3. Build a lookup table from the right-hand array for fast membership checks.\n4. Iterate through the left-hand array in order.\n5. Append elements according to the requested membership rule.\n6. Return the resulting array."
+  },
+  {
+    "request_text": "Очистить массив result перед повторным использованием",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"result\": [1, 2, 3, 4]\n    }\n  }\n}",
+    "request_answer_example": "local result = wf.vars.result\ntable.clear(result)\nreturn result",
+    "request_algorithm": "1. Read the array at wf.vars.result.\n2. Remove all existing elements from the array.\n3. Return the now-empty array."
+  },
+  {
+    "request_text": "Вставить элемент priority в начало массива queue",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"queue\": [\"task2\", \"task3\"],\n      \"priority\": \"task1\"\n    }\n  }\n}",
+    "request_answer_example": "local result = wf.vars.queue\ntable.insert(result, 1, wf.vars.priority)\nreturn result",
+    "request_algorithm": "1. Read the value at wf.vars.queue.\n2. Read the value at wf.vars.priority.\n3. Insert the provided element at index 1 of the target array.\n4. Return the updated array."
+  },
+  {
+    "request_text": "Удалить последний элемент массива stack",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"stack\": [\"a\", \"b\", \"c\"]\n    }\n  }\n}",
+    "request_answer_example": "local result = wf.vars.stack\nlocal removed = table.remove(result)\nreturn {\n  removed = removed,\n  stack = result\n}",
+    "request_algorithm": "1. Read the array at wf.vars.stack.\n2. Remove the element at the last array position.\n3. Return the updated array."
+  },
+  {
+    "request_text": "Посчитать количество переданных аргументов через select",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"values\": [\"A\", \"B\", \"C\", \"D\"]\n    }\n  }\n}",
+    "request_answer_example": "local function count(...)\n  return select(\"#\", ...)\nend\n\nreturn count(\n  wf.vars.values[1],\n  wf.vars.values[2],\n  wf.vars.values[3],\n  wf.vars.values[4]\n)",
+    "request_algorithm": "1. Read the values from wf.vars.values.\n2. Pass them as variadic arguments to helper logic.\n3. Use select with '#' to count how many arguments were passed.\n4. Return that count."
+  },
+  {
+    "request_text": "Вернуть последний из переданных аргументов через select",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"values\": [\"alpha\", \"beta\", \"gamma\"]\n    }\n  }\n}",
+    "request_answer_example": "local function last(...)\n  local n = select(\"#\", ...)\n  return select(n, ...)\nend\n\nreturn last(\n  wf.vars.values[1],\n  wf.vars.values[2],\n  wf.vars.values[3]\n)",
+    "request_algorithm": "1. Read the values from wf.vars.values.\n2. Pass them as variadic arguments to helper logic.\n3. Use select to determine the argument count and access the last argument.\n4. Return the last argument."
+  },
+  {
+    "request_text": "Создать две независимые функции-счетчики и показать, что состояние раздельное",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"start1\": 0,\n      \"start2\": 10\n    }\n  }\n}",
+    "request_answer_example": "local function makeCounter(start)\n  local value = start\n  return function()\n    value = value + 1\n    return value\n  end\nend\n\nlocal c1 = makeCounter(wf.vars.start1)\nlocal c2 = makeCounter(wf.vars.start2)\n\nreturn {\n  c1_first = c1(),\n  c1_second = c1(),\n  c2_first = c2(),\n  c2_second = c2()\n}",
+    "request_algorithm": "1. Create a counter factory function that closes over its own internal state.\n2. Create the first counter instance from that factory.\n3. Create the second counter instance from the same factory.\n4. Call both counters in the required order to demonstrate separate state.\n5. Return the collected counter values."
+  },
+  {
+    "request_text": "Найти максимальную глубину вложенной таблицы",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"data\": {\n        \"a\": 1,\n        \"b\": {\n          \"c\": {\n            \"d\": 2\n          }\n        }\n      }\n    }\n  }\n}",
+    "request_answer_example": "local function depth(value)\n  if type(value) ~= \"table\" then\n    return 0\n  end\n\n  local maxDepth = 0\n  for _, v in pairs(value) do\n    local childDepth = depth(v)\n    if childDepth > maxDepth then\n      maxDepth = childDepth\n    end\n  end\n\n  return maxDepth + 1\nend\n\nreturn depth(wf.vars.data)",
+    "request_algorithm": "1. Read the table at wf.vars.data.\n2. Define recursive helper logic that computes nesting depth.\n3. For non-table values, return the base depth.\n4. For table values, inspect all child fields and compute the maximum child depth.\n5. Return the maximum depth for the original table."
+  },
+  {
+    "request_text": "Считать значения из coroutine, пока она не завершится",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local co = coroutine.create(function()\n  for i = 1, 3 do\n    coroutine.yield(i * 10)\n  end\n  return 99\nend)\n\nlocal result = _utils.array.new()\n\nwhile coroutine.status(co) ~= \"dead\" do\n  local ok, value = coroutine.resume(co)\n  if ok and value ~= nil then\n    table.insert(result, value)\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Create or read the coroutine that yields intermediate values.\n2. Create a result array.\n3. Resume the coroutine repeatedly while its status is not dead.\n4. After each successful resume, append the yielded value to the result array.\n5. Stop when the coroutine finishes.\n6. Return the collected values."
+  },
+  {
+    "request_text": "Сделать fallback к defaults через metatable __index",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"defaults\": {\n        \"lang\": \"ru\",\n        \"theme\": \"light\"\n      },\n      \"userSettings\": {\n        \"theme\": \"dark\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local settings = wf.vars.userSettings\nsetmetatable(settings, { __index = wf.vars.defaults })\n\nreturn {\n  lang = settings.lang,\n  theme = settings.theme\n}",
+    "request_algorithm": "1. Read the value at wf.vars.userSettings.\n2. Read the value at wf.vars.defaults.\n3. Attach a metatable to the primary object so missing fields are resolved from the defaults object through __index.\n4. Read the requested fields from the primary object.\n5. Return the values with fallback behavior applied."
+  },
+  {
+    "request_text": "Скрыть metatable у объекта через __metatable",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"obj\": {\n        \"name\": \"secret\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local obj = wf.vars.obj\n\nsetmetatable(obj, {\n  __metatable = \"protected\"\n})\n\nreturn getmetatable(obj)",
+    "request_algorithm": "1. Read the object at wf.vars.obj.\n2. Attach a metatable that defines a protected __metatable value.\n3. Attempt to read the object's metatable through the public API.\n4. Return the externally visible metatable value."
+  },
+  {
+    "request_text": "Сделать объект сравнимым на равенство по полю id через __eq",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"a\": {\"id\": 10},\n      \"b\": {\"id\": 10}\n    }\n  }\n}",
+    "request_answer_example": "local mt = {\n  __eq = function(left, right)\n    return left.id == right.id\n  end\n}\n\nlocal a = wf.vars.a\nlocal b = wf.vars.b\n\nsetmetatable(a, mt)\nsetmetatable(b, mt)\n\nreturn a == b",
+    "request_algorithm": "1. Read the value at wf.vars.a.\n2. Read the value at wf.vars.b.\n3. Attach metatable logic that defines equality comparison by the id field.\n4. Compare the two objects with the equality operator.\n5. Return the boolean comparison result."
+  },
+  {
+    "request_text": "Сделать объект person индексируемым по полю full_name через __index-функцию",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"person\": {\n        \"first_name\": \"Anna\",\n        \"last_name\": \"Smirnova\"\n      }\n    }\n  }\n}",
+    "request_answer_example": "local person = wf.vars.person\n\nsetmetatable(person, {\n  __index = function(obj, key)\n    if key == \"full_name\" then\n      return obj.first_name .. \" \" .. obj.last_name\n    end\n    return nil\n  end\n})\n\nreturn person.full_name",
+    "request_algorithm": "1. Read the object at wf.vars.person.\n2. Attach a metatable with an __index function.\n3. In that function, when the requested key is full_name, combine the first and last name fields.\n4. Read the full_name field from the object.\n5. Return the synthesized value."
+  },
+  {
+    "request_text": "Получить массив всех UTF-8 символов строки",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"text\": \"Привет\"\n    }\n  }\n}",
+    "request_answer_example": "local result = _utils.array.new()\n\nlocal i = 1\nwhile i <= #wf.vars.text do\n  local j = utf8.offset(wf.vars.text, 2, i)\n  if j == nil then\n    table.insert(result, string.sub(wf.vars.text, i))\n    break\n  else\n    table.insert(result, string.sub(wf.vars.text, i, j - 1))\n    i = j\n  end\nend\n\nreturn result",
+    "request_algorithm": "1. Read the UTF-8 string at wf.vars.text.\n2. Create a new result array.\n3. Iterate through the string by UTF-8 character boundaries.\n4. Extract each full UTF-8 character and append it to the result array.\n5. Return the array of UTF-8 characters."
+  },
+  {
+    "request_text": "Проверить, что в строке ровно 5 UTF-8 символов",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"text\": \"домик\"\n    }\n  }\n}",
+    "request_answer_example": "return utf8.len(wf.vars.text) == 5",
+    "request_algorithm": "1. Read the UTF-8 string at wf.vars.text.\n2. Count the number of UTF-8 characters in the string.\n3. Compare the resulting count with the expected value 5.\n4. Return the boolean result of that comparison."
+  },
+  {
+    "request_text": "Преобразовать текущую дату в компактный формат YYYYMMDD",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "return os.date(\"%Y%m%d\")",
+    "request_algorithm": "1. Read the current date from the operating system.\n2. Format it as YYYYMMDD without separators.\n3. Return the formatted string."
+  },
+  {
+    "request_text": "Преобразовать timestamp в ISO-подобную строку UTC",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"timestamp\": 1700000000\n    }\n  }\n}",
+    "request_answer_example": "return os.date(\"!%Y-%m-%dT%H:%M:%SZ\", wf.vars.timestamp)",
+    "request_algorithm": "1. Read the Unix timestamp at wf.vars.timestamp.\n2. Format that timestamp as a UTC date-time string in the required ISO-like layout.\n3. Return the formatted string."
+  },
+  {
+    "request_text": "Прибавить один день к дате, заданной через os.time-таблицу",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"date\": {\n        \"year\": 2025,\n        \"month\": 4,\n        \"day\": 10,\n        \"hour\": 0,\n        \"min\": 0,\n        \"sec\": 0\n      }\n    }\n  }\n}",
+    "request_answer_example": "local ts = os.time(wf.vars.date)\nreturn os.date(\"%Y-%m-%d\", ts + 86400)",
+    "request_algorithm": "1. Read the date table at wf.vars.date.\n2. Convert the date table to a Unix timestamp.\n3. Add 86400 seconds for one day.\n4. Convert the updated timestamp back to a date table or formatted result as required.\n5. Return the incremented date value."
+  },
+  {
+    "request_text": "Открыть файл и проверить, что дескриптор успешно получен",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/data.txt\"\n    }\n  }\n}",
+    "request_answer_example": "local file, err = io.open(wf.vars.filePath, \"r\")\nif not file then\n  return err\nend\nfile:close()\nreturn true",
+    "request_algorithm": "1. Read the file path at wf.vars.filePath.\n2. Attempt to open the file.\n3. Check whether a valid file handle was returned.\n4. Close the handle if it was opened.\n5. Return the boolean success result."
+  },
+  {
+    "request_text": "Переключить текущий вход на файл через io.input и прочитать первую строку",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/data.txt\"\n    }\n  }\n}",
+    "request_answer_example": "local file = assert(io.open(wf.vars.filePath, \"r\"))\nio.input(file)\nlocal line = io.read(\"*l\")\nfile:close()\nreturn line",
+    "request_algorithm": "1. Read the file path at wf.vars.filePath.\n2. Open that file as the current input stream with io.input.\n3. Read the first line from the current input.\n4. Return the read line."
+  },
+  {
+    "request_text": "Записать несколько строк в файл через file:write",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"filePath\": \"/tmp/data.txt\",\n      \"lines\": [\"first\", \"second\", \"third\"]\n    }\n  }\n}",
+    "request_answer_example": "local file = assert(io.open(wf.vars.filePath, \"w\"))\n\nfor _, line in ipairs(wf.vars.lines) do\n  file:write(line, \"\\n\")\nend\n\nfile:close()\nreturn true",
+    "request_algorithm": "1. Read the value at wf.vars.filePath.\n2. Read the value at wf.vars.lines.\n3. Open the target file for writing.\n4. Write the required content to the file.\n5. Close the file handle.\n6. Return true to indicate successful completion."
+  },
+  {
+    "request_text": "Проверить через assert, что email содержит символ @",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"email\": \"user@example.com\"\n    }\n  }\n}",
+    "request_answer_example": "assert(string.find(wf.vars.email, \"@\", 1, true), \"invalid email\")\nreturn true",
+    "request_algorithm": "1. Read the email string at wf.vars.email.\n2. Assert that the string contains the @ symbol.\n3. Return the assertion result when the condition holds."
+  },
+  {
+    "request_text": "Поймать ошибку от assert через pcall",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"email\": \"invalid.email\"\n    }\n  }\n}",
+    "request_answer_example": "local ok, result = pcall(function()\n  assert(string.find(wf.vars.email, \"@\", 1, true), \"invalid email\")\n  return true\nend)\n\nif ok then\n  return result\nend\n\nreturn result",
+    "request_algorithm": "1. Read the value at wf.vars.email.\n2. Execute the division logic inside protected call handling.\n3. Inside that protected logic, raise an error when the divisor is zero.\n4. If the protected call succeeds, return the numeric division result.\n5. If the protected call fails, return the error text instead."
+  },
+  {
+    "request_text": "Получить имя upvalue-функции и ее текущее значение",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"dummy\": true\n    }\n  }\n}",
+    "request_answer_example": "local token = \"abc123\"\n\nlocal function getToken()\n  return token\nend\n\nlocal name, value = debug.getupvalue(getToken, 1)\nreturn {\n  name = name,\n  value = value\n}",
+    "request_algorithm": "1. Read or create the target closure at the function with upvalues.\n2. Use debug.getupvalue to read the first upvalue name and its current value.\n3. Place the name and value into a result table.\n4. Return that table."
+  },
+  {
+    "request_text": "Показать загружен ли модуль json в package.loaded",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"module_name\": \"json\"\n    }\n  }\n}",
+    "request_answer_example": "return package.loaded[wf.vars.module_name] ~= nil",
+    "request_algorithm": "1. Read the module name at wf.vars.module_name.\n2. Check whether that module is present in package.loaded.\n3. Return the boolean result."
+  },
+  {
+    "request_text": "Принудительно сбросить модуль из package.loaded",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"module_name\": \"json\"\n    }\n  }\n}",
+    "request_answer_example": "package.loaded[wf.vars.module_name] = nil\nreturn true",
+    "request_algorithm": "1. Read the module name at wf.vars.module_name.\n2. Set the corresponding entry in package.loaded to nil.\n3. Return true after the reset."
+  },
+  {
+    "request_text": "Выполнить код через load в ограниченном окружении",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"code\": \"return a + b\",\n      \"a\": 10,\n      \"b\": 15\n    }\n  }\n}",
+    "request_answer_example": "local env = {\n  a = wf.vars.a,\n  b = wf.vars.b\n}\n\nlocal fn = assert(load(wf.vars.code, \"expr\", \"t\", env))\nreturn fn()",
+    "request_algorithm": "1. Read the value at wf.vars.a.\n2. Read the value at wf.vars.b.\n3. Read the value at wf.vars.code.\n4. Create a restricted environment table that exposes only the allowed values.\n5. Compile the source code string with load using that restricted environment.\n6. Execute the compiled function inside the restricted environment.\n7. Return the execution result."
+  },
+  {
+    "request_text": "Собрать строку адреса из city, street и house только из непустых частей",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"city\": \"Moscow\",\n      \"street\": \"Tverskaya\",\n      \"house\": \"7\"\n    }\n  }\n}",
+    "request_answer_example": "local parts = _utils.array.new()\nlocal values = { wf.vars.city, wf.vars.street, wf.vars.house }\n\nfor _, value in ipairs(values) do\n  if value ~= nil and value ~= \"\" then\n    table.insert(parts, value)\n  end\nend\n\nreturn table.concat(parts, \", \")",
+    "request_algorithm": "1. Read the value at wf.vars.city.\n2. Read the value at wf.vars.street.\n3. Read the value at wf.vars.house.\n4. Create a list of the candidate address parts in the required order.\n5. Iterate through that list and keep only non-nil and non-empty values.\n6. Join the remaining parts with a comma and a space separator.\n7. Return the resulting address string."
+  },
+  {
+    "request_text": "Преобразовать массив заказов в summary по status с количеством",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"orders\": [\n        {\"id\": 1, \"status\": \"new\"},\n        {\"id\": 2, \"status\": \"paid\"},\n        {\"id\": 3, \"status\": \"new\"}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local result = {}\n\nfor _, order in ipairs(wf.vars.orders) do\n  result[order.status] = (result[order.status] or 0) + 1\nend\n\nreturn result",
+    "request_algorithm": "1. Read the source array at wf.vars.orders.\n2. Create a new result object.\n3. Iterate through each element of the array.\n4. Use the {field} field as the grouping key.\n5. Update the group entry according to the requested aggregation logic.\n6. Return the grouped result object."
+  },
+  {
+    "request_text": "Найти первый заказ со статусом paid",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"orders\": [\n        {\"id\": 1, \"status\": \"new\"},\n        {\"id\": 2, \"status\": \"paid\"},\n        {\"id\": 3, \"status\": \"cancelled\"}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "for _, order in ipairs(wf.vars.orders) do\n  if order.status == \"paid\" then\n    return order\n  end\nend\n\nreturn nil",
+    "request_algorithm": "1. Read the source array at wf.vars.orders.\n2. Iterate through the array in order.\n3. For each element, check whether it matches the requested condition.\n4. Return the first matching element immediately.\n5. If no element matches, return nil."
+  },
+  {
+    "request_text": "Посчитать общую сумму оплаченных заказов",
+    "request_data_example": "{\n  \"wf\": {\n    \"vars\": {\n      \"orders\": [\n        {\"id\": 1, \"status\": \"new\", \"amount\": 100},\n        {\"id\": 2, \"status\": \"paid\", \"amount\": 150},\n        {\"id\": 3, \"status\": \"paid\", \"amount\": 200}\n      ]\n    }\n  }\n}",
+    "request_answer_example": "local total = 0\n\nfor _, order in ipairs(wf.vars.orders) do\n  if order.status == \"paid\" then\n    total = total + order.amount\n  end\nend\n\nreturn total",
+    "request_algorithm": "1. Read the source array at wf.vars.orders.\n2. Initialize an accumulator to zero.\n3. Iterate through each element of the array.\n4. For each relevant element, add the requested numeric field to the accumulator.\n5. Return the final accumulated total."
+  }
+]

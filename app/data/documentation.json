@@ -1,0 +1,2678 @@
+[
+    {
+      "method_name": "nil",
+      "method_description": "Базовый тип со значением nil; обычно обозначает отсутствие значения.",
+      "method_realization": "type: nil"
+    },
+    {
+      "method_name": "boolean",
+      "method_description": "Логический тип со значениями true и false; в условиях false и nil считаются ложью.",
+      "method_realization": "type: boolean"
+    },
+    {
+      "method_name": "number",
+      "method_description": "Числовой тип Lua; включает подтипы integer и float.",
+      "method_realization": "type: number"
+    },
+    {
+      "method_name": "integer",
+      "method_description": "Целочисленный подтип number; в стандартной сборке Lua обычно 64-битный.",
+      "method_realization": "subtype of number: integer"
+    },
+    {
+      "method_name": "float",
+      "method_description": "Вещественный подтип number; в стандартной сборке Lua обычно double precision.",
+      "method_realization": "subtype of number: float"
+    },
+    {
+      "method_name": "string",
+      "method_description": "Неизменяемая последовательность байтов; строка в Lua 8-bit clean и может содержать \\0.",
+      "method_realization": "type: string"
+    },
+    {
+      "method_name": "function",
+      "method_description": "Функция Lua или C, представляемая как значение первого класса.",
+      "method_realization": "type: function"
+    },
+    {
+      "method_name": "userdata",
+      "method_description": "Тип для хранения внешних C-данных внутри Lua.",
+      "method_realization": "type: userdata"
+    },
+    {
+      "method_name": "light userdata",
+      "method_description": "Нелокируемый указатель C без управления памятью со стороны Lua.",
+      "method_realization": "type: light userdata"
+    },
+    {
+      "method_name": "full userdata",
+      "method_description": "Объект userdata с памятью, управляемой Lua, и поддержкой метатаблицы.",
+      "method_realization": "type: full userdata"
+    },
+    {
+      "method_name": "thread",
+      "method_description": "Поток выполнения Lua; используется для корутин и не равен системному OS-thread.",
+      "method_realization": "type: thread"
+    },
+    {
+      "method_name": "table",
+      "method_description": "Главная структура данных Lua: ассоциативный массив, используемый как массив, словарь, объект и т.д.",
+      "method_realization": "type: table"
+    },
+    {
+      "method_name": "_ENV",
+      "method_description": "Окружение разрешения свободных имен; обращение к глобальному имени обычно транслируется в _ENV.name.",
+      "method_realization": "special variable: _ENV"
+    },
+    {
+      "method_name": "_G",
+      "method_description": "Глобальная переменная, ссылающаяся на глобальное окружение.",
+      "method_realization": "global: _G"
+    },
+    {
+      "method_name": "global declaration",
+      "method_description": "В Lua 5.5 ключевое слово global явно объявляет глобальные имена в области видимости.",
+      "method_realization": "syntax: global name1, name2, ..."
+    },
+    {
+      "method_name": "local declaration",
+      "method_description": "Объявление локальных переменных в текущем блоке.",
+      "method_realization": "syntax: local name1, name2 = expr1, expr2"
+    },
+    {
+      "method_name": "scope",
+      "method_description": "Lua использует лексическую область видимости; локальные переменные видны от точки объявления до конца блока.",
+      "method_realization": "concept: lexical scope"
+    },
+    {
+      "method_name": "upvalue",
+      "method_description": "Локальная переменная внешней функции, захваченная внутренней функцией.",
+      "method_realization": "concept: upvalue"
+    },
+    {
+      "method_name": "chunk",
+      "method_description": "Компилируемая единица кода Lua; файл или строка рассматриваются как chunk.",
+      "method_realization": "concept: chunk"
+    },
+    {
+      "method_name": "error handling",
+      "method_description": "Ошибки могут быть перехвачены через pcall/xpcall; объект ошибки может быть почти любым значением, кроме nil.",
+      "method_realization": "concept: protected calls and error objects"
+    },
+    {
+      "method_name": "warning system",
+      "method_description": "Система предупреждений Lua не прерывает выполнение и настраивается из C через warning callbacks.",
+      "method_realization": "concept: warn / lua_setwarnf"
+    },
+    {
+      "method_name": "metatable",
+      "method_description": "Обычная таблица, которая определяет поведение значения при специальных операциях.",
+      "method_realization": "concept: metatable"
+    },
+    {
+      "method_name": "metamethod",
+      "method_description": "Поле метатаблицы с именем вида __add, __index и т.д., управляющее поведением операций.",
+      "method_realization": "concept: metamethod"
+    },
+    {
+      "method_name": "garbage collection",
+      "method_description": "Автоматическое управление памятью Lua; поддерживает incremental и generational режимы.",
+      "method_realization": "concept: GC"
+    },
+    {
+      "method_name": "incremental GC",
+      "method_description": "Режим GC, выполняющий сборку мусора небольшими шагами.",
+      "method_realization": "mode: incremental GC"
+    },
+    {
+      "method_name": "generational GC",
+      "method_description": "Режим GC, оптимизированный под короткоживущие объекты через minor/major collection.",
+      "method_realization": "mode: generational GC"
+    },
+    {
+      "method_name": "weak tables",
+      "method_description": "Таблицы с режимом слабых ссылок через метаполе __mode.",
+      "method_realization": "concept: weak tables"
+    },
+    {
+      "method_name": "coroutine",
+      "method_description": "Кооперативная многозадачность в Lua через создание, resume, yield и close корутин.",
+      "method_realization": "concept: coroutine"
+    },
+    {
+      "method_name": "lexical conventions",
+      "method_description": "Правила токенизации языка: идентификаторы, литералы, строки, комментарии, числовые литералы и т.д.",
+      "method_realization": "section: lexical conventions"
+    },
+    {
+      "method_name": "statements",
+      "method_description": "Операторы Lua: блоки, присваивания, условные конструкции, циклы, объявления и вызовы.",
+      "method_realization": "section: statements"
+    },
+    {
+      "method_name": "expressions",
+      "method_description": "Выражения Lua включают литералы, операции, обращения к таблицам, вызовы и определения функций.",
+      "method_realization": "section: expressions"
+    },
+    {
+      "method_name": "table constructor",
+      "method_description": "Синтаксис создания таблиц через фигурные скобки.",
+      "method_realization": "syntax: { fieldlist }"
+    },
+    {
+      "method_name": "function definition",
+      "method_description": "Определение функции через function ... end или анонимные функции.",
+      "method_realization": "syntax: function f(...) ... end"
+    },
+    {
+      "method_name": "multiple results",
+      "method_description": "Функции и некоторые выражения в Lua могут возвращать несколько значений.",
+      "method_realization": "concept: multires"
+    },
+    {
+      "method_name": "to-be-closed variable",
+      "method_description": "Переменная, автоматически закрываемая при выходе из области видимости; использует __close.",
+      "method_realization": "syntax: local x <close> = expr"
+    },
+    {
+      "method_name": "basic operators",
+      "method_description": "Арифметические, побитовые, логические, сравнительные и строковые операторы Lua.",
+      "method_realization": "section: operators"
+    },
+    {
+      "method_name": "precedence",
+      "method_description": "Таблица приоритетов операций Lua для корректного разбора выражений.",
+      "method_realization": "section: precedence"
+    },
+    {
+      "method_name": "complete syntax",
+      "method_description": "Формальная грамматика Lua 5.5.",
+      "method_realization": "section: complete syntax"
+    },
+    {
+      "method_name": "Lua standalone",
+      "method_description": "Исполняемый файл lua, позволяющий запускать скрипты, REPL и передавать init/code через командную строку.",
+      "method_realization": "program: lua"
+    },
+    {
+      "method_name": "__add",
+      "method_description": "Метаметод сложения для оператора +.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__sub",
+      "method_description": "Метаметод вычитания для оператора -.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__mul",
+      "method_description": "Метаметод умножения для оператора *.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__div",
+      "method_description": "Метаметод деления для оператора /.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__mod",
+      "method_description": "Метаметод остатка от деления для оператора %.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__pow",
+      "method_description": "Метаметод возведения в степень для оператора ^.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__unm",
+      "method_description": "Метаметод унарного минуса.",
+      "method_realization": "function(self [, dummy]) -> result"
+    },
+    {
+      "method_name": "__idiv",
+      "method_description": "Метаметод целочисленного деления для //.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__band",
+      "method_description": "Метаметод побитового AND для &.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__bor",
+      "method_description": "Метаметод побитового OR для |.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__bxor",
+      "method_description": "Метаметод побитового XOR для ~.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__bnot",
+      "method_description": "Метаметод побитового NOT.",
+      "method_realization": "function(self [, dummy]) -> result"
+    },
+    {
+      "method_name": "__shl",
+      "method_description": "Метаметод сдвига влево для <<.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__shr",
+      "method_description": "Метаметод сдвига вправо для >>.",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__concat",
+      "method_description": "Метаметод конкатенации для ..",
+      "method_realization": "function(self, other) -> result"
+    },
+    {
+      "method_name": "__len",
+      "method_description": "Метаметод длины для #.",
+      "method_realization": "function(self [, dummy]) -> result"
+    },
+    {
+      "method_name": "__eq",
+      "method_description": "Метаметод равенства для ==.",
+      "method_realization": "function(self, other) -> boolean"
+    },
+    {
+      "method_name": "__lt",
+      "method_description": "Метаметод меньше чем для <.",
+      "method_realization": "function(self, other) -> boolean"
+    },
+    {
+      "method_name": "__le",
+      "method_description": "Метаметод меньше или равно для <=.",
+      "method_realization": "function(self, other) -> boolean"
+    },
+    {
+      "method_name": "__index",
+      "method_description": "Метаметод чтения отсутствующего поля/индекса.",
+      "method_realization": "function(table, key) -> value | table fallback"
+    },
+    {
+      "method_name": "__newindex",
+      "method_description": "Метаметод записи в отсутствующее поле/индекс.",
+      "method_realization": "function(table, key, value)"
+    },
+    {
+      "method_name": "__call",
+      "method_description": "Метаметод вызова значения как функции.",
+      "method_realization": "function(self, ...) -> ..."
+    },
+    {
+      "method_name": "__gc",
+      "method_description": "Метаметод финализации для full userdata и некоторых таблиц.",
+      "method_realization": "function(self)"
+    },
+    {
+      "method_name": "__close",
+      "method_description": "Метаметод закрытия для to-be-closed переменных.",
+      "method_realization": "function(self, err)"
+    },
+    {
+      "method_name": "__mode",
+      "method_description": "Поле метатаблицы, управляющее слабыми ключами/значениями ('k', 'v', 'kv').",
+      "method_realization": "string: 'k' | 'v' | 'kv'"
+    },
+    {
+      "method_name": "__metatable",
+      "method_description": "Поле защиты метатаблицы; getmetatable вернет это значение вместо реальной метатаблицы.",
+      "method_realization": "any"
+    },
+    {
+      "method_name": "__name",
+      "method_description": "Человекочитаемое имя типа/объекта, используемое в сообщениях и tostring.",
+      "method_realization": "string"
+    },
+    {
+      "method_name": "__pairs",
+      "method_description": "Кастомизация итерации через pairs.",
+      "method_realization": "function(self) -> iter, state, init"
+    },
+    {
+      "method_name": "__tostring",
+      "method_description": "Кастомизация tostring.",
+      "method_realization": "function(self) -> string"
+    },
+    {
+      "method_name": "_VERSION",
+      "method_description": "Строковая константа с версией Lua.",
+      "method_realization": "_VERSION -> string"
+    },
+    {
+      "method_name": "assert",
+      "method_description": "Проверяет условие и выбрасывает ошибку, если значение ложно; иначе возвращает все аргументы.",
+      "method_realization": "assert(v [, message]) -> v, ..."
+    },
+    {
+      "method_name": "collectgarbage",
+      "method_description": "Универсальный интерфейс к сборщику мусора: collect, stop, restart, count, step, param и др.",
+      "method_realization": "collectgarbage([opt [, arg]]) -> value"
+    },
+    {
+      "method_name": "dofile",
+      "method_description": "Загружает и выполняет файл как Lua chunk.",
+      "method_realization": "dofile([filename]) -> ..."
+    },
+    {
+      "method_name": "error",
+      "method_description": "Генерирует ошибку с указанным объектом.",
+      "method_realization": "error(message [, level]) -> never"
+    },
+    {
+      "method_name": "getmetatable",
+      "method_description": "Возвращает метатаблицу значения либо защищенное значение __metatable.",
+      "method_realization": "getmetatable(object) -> metatable"
+    },
+    {
+      "method_name": "ipairs",
+      "method_description": "Итератор по последовательной числовой части таблицы с индекса 1.",
+      "method_realization": "ipairs(t) -> iterator, t, 0"
+    },
+    {
+      "method_name": "load",
+      "method_description": "Компилирует chunk из строки или reader-функции; можно указать mode и окружение.",
+      "method_realization": "load(chunk [, chunkname [, mode [, env]]]) -> function | fail, msg"
+    },
+    {
+      "method_name": "loadfile",
+      "method_description": "Компилирует chunk из файла.",
+      "method_realization": "loadfile([filename [, mode [, env]]]) -> function | fail, msg"
+    },
+    {
+      "method_name": "next",
+      "method_description": "Низкоуровневый переход к следующей паре ключ-значение в таблице.",
+      "method_realization": "next(table [, index]) -> next_index, next_value"
+    },
+    {
+      "method_name": "pairs",
+      "method_description": "Итератор по всем парам таблицы; может учитывать __pairs.",
+      "method_realization": "pairs(t) -> iterator, state, init"
+    },
+    {
+      "method_name": "pcall",
+      "method_description": "Вызывает функцию в защищенном режиме.",
+      "method_realization": "pcall(f, ...) -> ok, result1, ..."
+    },
+    {
+      "method_name": "print",
+      "method_description": "Печатает аргументы в стандартный вывод через tostring с таб-разделителем.",
+      "method_realization": "print(...)"
+    },
+    {
+      "method_name": "rawequal",
+      "method_description": "Сравнивает значения без вызова метаметодов.",
+      "method_realization": "rawequal(v1, v2) -> boolean"
+    },
+    {
+      "method_name": "rawget",
+      "method_description": "Читает поле таблицы без __index.",
+      "method_realization": "rawget(table, index) -> value"
+    },
+    {
+      "method_name": "rawlen",
+      "method_description": "Возвращает длину строки или таблицы без __len.",
+      "method_realization": "rawlen(v) -> integer"
+    },
+    {
+      "method_name": "rawset",
+      "method_description": "Записывает поле таблицы без __newindex.",
+      "method_realization": "rawset(table, index, value) -> table"
+    },
+    {
+      "method_name": "require",
+      "method_description": "Загружает модуль через package.searchers и кеш package.loaded.",
+      "method_realization": "require(modname) -> module"
+    },
+    {
+      "method_name": "select",
+      "method_description": "Возвращает часть varargs или количество переданных varargs.",
+      "method_realization": "select(index, ...) -> ... | integer"
+    },
+    {
+      "method_name": "setmetatable",
+      "method_description": "Устанавливает метатаблицу таблицы.",
+      "method_realization": "setmetatable(table, metatable) -> table"
+    },
+    {
+      "method_name": "tonumber",
+      "method_description": "Преобразует значение в число, при необходимости с основанием base.",
+      "method_realization": "tonumber(e [, base]) -> number | nil"
+    },
+    {
+      "method_name": "tostring",
+      "method_description": "Преобразует значение в строку, возможно с использованием __tostring.",
+      "method_realization": "tostring(v) -> string"
+    },
+    {
+      "method_name": "type",
+      "method_description": "Возвращает имя типа значения.",
+      "method_realization": "type(v) -> string"
+    },
+    {
+      "method_name": "warn",
+      "method_description": "Отправляет предупреждения в систему warning Lua.",
+      "method_realization": "warn(msg1, ...)"
+    },
+    {
+      "method_name": "xpcall",
+      "method_description": "Защищенный вызов с message handler.",
+      "method_realization": "xpcall(f, msgh, ...) -> ok, result1, ..."
+    },
+    {
+      "method_name": "coroutine",
+      "method_description": "Стандартная библиотека кооперативных корутин.",
+      "method_realization": "library: coroutine"
+    },
+    {
+      "method_name": "coroutine.close",
+      "method_description": "Закрывает корутину и освобождает ожидающие ресурсы.",
+      "method_realization": "coroutine.close(co) -> ok | fail, err"
+    },
+    {
+      "method_name": "coroutine.create",
+      "method_description": "Создает новую корутину из функции.",
+      "method_realization": "coroutine.create(f) -> thread"
+    },
+    {
+      "method_name": "coroutine.isyieldable",
+      "method_description": "Проверяет, можно ли yield в текущем контексте.",
+      "method_realization": "coroutine.isyieldable([co]) -> boolean"
+    },
+    {
+      "method_name": "coroutine.resume",
+      "method_description": "Продолжает выполнение корутины.",
+      "method_realization": "coroutine.resume(co, ...) -> ok, result1, ..."
+    },
+    {
+      "method_name": "coroutine.running",
+      "method_description": "Возвращает текущую корутину и флаг main-thread.",
+      "method_realization": "coroutine.running() -> thread, ismain"
+    },
+    {
+      "method_name": "coroutine.status",
+      "method_description": "Возвращает статус корутины: running, suspended, normal или dead.",
+      "method_realization": "coroutine.status(co) -> string"
+    },
+    {
+      "method_name": "coroutine.wrap",
+      "method_description": "Создает функцию-обертку для resume корутины.",
+      "method_realization": "coroutine.wrap(f) -> function"
+    },
+    {
+      "method_name": "coroutine.yield",
+      "method_description": "Приостанавливает текущую корутину и возвращает значения вызывающему.",
+      "method_realization": "coroutine.yield(...) -> ..."
+    },
+    {
+      "method_name": "package",
+      "method_description": "Библиотека модулей и загрузчиков.",
+      "method_realization": "library: package"
+    },
+    {
+      "method_name": "package.config",
+      "method_description": "Строка конфигурации путей и разделителей для require/searchpath.",
+      "method_realization": "package.config -> string"
+    },
+    {
+      "method_name": "package.cpath",
+      "method_description": "Путь поиска C-модулей.",
+      "method_realization": "package.cpath -> string"
+    },
+    {
+      "method_name": "package.loaded",
+      "method_description": "Таблица кеша уже загруженных модулей.",
+      "method_realization": "package.loaded -> table"
+    },
+    {
+      "method_name": "package.loadlib",
+      "method_description": "Загружает динамическую библиотеку и ищет в ней функцию-инициализатор.",
+      "method_realization": "package.loadlib(libname, funcname) -> loader | fail, msg, where"
+    },
+    {
+      "method_name": "package.path",
+      "method_description": "Путь поиска Lua-модулей.",
+      "method_realization": "package.path -> string"
+    },
+    {
+      "method_name": "package.preload",
+      "method_description": "Таблица preload-загрузчиков для require.",
+      "method_realization": "package.preload -> table"
+    },
+    {
+      "method_name": "package.searchers",
+      "method_description": "Список функций-поисковиков модулей для require.",
+      "method_realization": "package.searchers -> table"
+    },
+    {
+      "method_name": "package.searchpath",
+      "method_description": "Ищет файл по шаблону пути.",
+      "method_realization": "package.searchpath(name, path [, sep [, rep]]) -> filename | nil, err"
+    },
+    {
+      "method_name": "string",
+      "method_description": "Библиотека строковых операций и паттернов.",
+      "method_realization": "library: string"
+    },
+    {
+      "method_name": "string.byte",
+      "method_description": "Возвращает числовые коды байтов строки.",
+      "method_realization": "string.byte(s [, i [, j]]) -> integer, ..."
+    },
+    {
+      "method_name": "string.char",
+      "method_description": "Строит строку из кодов байтов.",
+      "method_realization": "string.char(...) -> string"
+    },
+    {
+      "method_name": "string.dump",
+      "method_description": "Сериализует Lua-функцию в бинарный chunk.",
+      "method_realization": "string.dump(function [, strip]) -> string"
+    },
+    {
+      "method_name": "string.find",
+      "method_description": "Ищет первое совпадение подстроки или паттерна.",
+      "method_realization": "string.find(s, pattern [, init [, plain]]) -> start, finish, captures..."
+    },
+    {
+      "method_name": "string.format",
+      "method_description": "Форматирует строку по printf-подобному шаблону.",
+      "method_realization": "string.format(formatstring, ...) -> string"
+    },
+    {
+      "method_name": "string.gmatch",
+      "method_description": "Возвращает итератор по всем совпадениям паттерна.",
+      "method_realization": "string.gmatch(s, pattern [, init]) -> iterator"
+    },
+    {
+      "method_name": "string.gsub",
+      "method_description": "Заменяет совпадения паттерна.",
+      "method_realization": "string.gsub(s, pattern, repl [, n]) -> new_string, count"
+    },
+    {
+      "method_name": "string.len",
+      "method_description": "Возвращает длину строки в байтах.",
+      "method_realization": "string.len(s) -> integer"
+    },
+    {
+      "method_name": "string.lower",
+      "method_description": "Понижает регистр символов строки.",
+      "method_realization": "string.lower(s) -> string"
+    },
+    {
+      "method_name": "string.match",
+      "method_description": "Возвращает первое совпадение паттерна и захваты.",
+      "method_realization": "string.match(s, pattern [, init]) -> captures..."
+    },
+    {
+      "method_name": "string.pack",
+      "method_description": "Упаковывает значения в бинарную строку по format.",
+      "method_realization": "string.pack(fmt, v1, ...) -> string"
+    },
+    {
+      "method_name": "string.packsize",
+      "method_description": "Возвращает размер пакета для фиксированного формата.",
+      "method_realization": "string.packsize(fmt) -> integer"
+    },
+    {
+      "method_name": "string.rep",
+      "method_description": "Повторяет строку count раз, опционально с разделителем.",
+      "method_realization": "string.rep(s, n [, sep]) -> string"
+    },
+    {
+      "method_name": "string.reverse",
+      "method_description": "Разворачивает строку по байтам.",
+      "method_realization": "string.reverse(s) -> string"
+    },
+    {
+      "method_name": "string.sub",
+      "method_description": "Возвращает подстроку по индексам.",
+      "method_realization": "string.sub(s, i [, j]) -> string"
+    },
+    {
+      "method_name": "string.unpack",
+      "method_description": "Распаковывает значения из бинарной строки.",
+      "method_realization": "string.unpack(fmt, s [, pos]) -> values..., nextpos"
+    },
+    {
+      "method_name": "string.upper",
+      "method_description": "Повышает регистр символов строки.",
+      "method_realization": "string.upper(s) -> string"
+    },
+    {
+      "method_name": "patterns",
+      "method_description": "Система паттернов Lua для поиска и сопоставления строк.",
+      "method_realization": "concept: Lua patterns"
+    },
+    {
+      "method_name": "pack/unpack format strings",
+      "method_description": "Форматные строки для string.pack/string.unpack.",
+      "method_realization": "section: pack/unpack formats"
+    },
+    {
+      "method_name": "utf8",
+      "method_description": "Библиотека для работы с UTF-8 последовательностями.",
+      "method_realization": "library: utf8"
+    },
+    {
+      "method_name": "utf8.char",
+      "method_description": "Собирает UTF-8 строку из кодовых точек.",
+      "method_realization": "utf8.char(...) -> string"
+    },
+    {
+      "method_name": "utf8.charpattern",
+      "method_description": "Паттерн для одного UTF-8 символа.",
+      "method_realization": "utf8.charpattern -> string"
+    },
+    {
+      "method_name": "utf8.codepoint",
+      "method_description": "Возвращает кодовые точки символов UTF-8 строки.",
+      "method_realization": "utf8.codepoint(s [, i [, j [, lax]]]) -> integer, ..."
+    },
+    {
+      "method_name": "utf8.codes",
+      "method_description": "Итератор по позициям и кодовым точкам UTF-8 строки.",
+      "method_realization": "utf8.codes(s [, lax]) -> iterator"
+    },
+    {
+      "method_name": "utf8.len",
+      "method_description": "Длина строки в символах UTF-8, либо nil и позиция ошибки.",
+      "method_realization": "utf8.len(s [, i [, j [, lax]]]) -> integer | nil, errpos"
+    },
+    {
+      "method_name": "utf8.offset",
+      "method_description": "Возвращает байтовую позицию n-го UTF-8 символа относительно заданной позиции.",
+      "method_realization": "utf8.offset(s, n [, i]) -> initial_pos, final_pos | nil"
+    },
+    {
+      "method_name": "table",
+      "method_description": "Библиотека операций над таблицами и последовательностями.",
+      "method_realization": "library: table"
+    },
+    {
+      "method_name": "table.concat",
+      "method_description": "Конкатенирует элементы последовательности в строку.",
+      "method_realization": "table.concat(list [, sep [, i [, j]]]) -> string"
+    },
+    {
+      "method_name": "table.create",
+      "method_description": "Создает таблицу с заранее выделенной емкостью для массива и/или хеша.",
+      "method_realization": "table.create(narray [, nrec]) -> table"
+    },
+    {
+      "method_name": "table.insert",
+      "method_description": "Вставляет значение в последовательность.",
+      "method_realization": "table.insert(list, [pos,] value)"
+    },
+    {
+      "method_name": "table.move",
+      "method_description": "Копирует диапазон элементов между таблицами.",
+      "method_realization": "table.move(a1, f, e, t [, a2]) -> a2"
+    },
+    {
+      "method_name": "table.pack",
+      "method_description": "Упаковывает аргументы в таблицу с полем n.",
+      "method_realization": "table.pack(...) -> table"
+    },
+    {
+      "method_name": "table.remove",
+      "method_description": "Удаляет элемент из последовательности.",
+      "method_realization": "table.remove(list [, pos]) -> removed"
+    },
+    {
+      "method_name": "table.sort",
+      "method_description": "Сортирует последовательность на месте, опционально с компаратором.",
+      "method_realization": "table.sort(list [, comp])"
+    },
+    {
+      "method_name": "table.unpack",
+      "method_description": "Распаковывает элементы последовательности в список значений.",
+      "method_realization": "table.unpack(list [, i [, j]]) -> ..."
+    },
+    {
+      "method_name": "math",
+      "method_description": "Математическая библиотека.",
+      "method_realization": "library: math"
+    },
+    {
+      "method_name": "math.abs",
+      "method_description": "Абсолютное значение.",
+      "method_realization": "math.abs(x) -> number"
+    },
+    {
+      "method_name": "math.acos",
+      "method_description": "Арккосинус.",
+      "method_realization": "math.acos(x) -> number"
+    },
+    {
+      "method_name": "math.asin",
+      "method_description": "Арксинус.",
+      "method_realization": "math.asin(x) -> number"
+    },
+    {
+      "method_name": "math.atan",
+      "method_description": "Арктангенс, возможно с двумя аргументами.",
+      "method_realization": "math.atan(y [, x]) -> number"
+    },
+    {
+      "method_name": "math.ceil",
+      "method_description": "Округление вверх.",
+      "method_realization": "math.ceil(x) -> integer | float"
+    },
+    {
+      "method_name": "math.cos",
+      "method_description": "Косинус.",
+      "method_realization": "math.cos(x) -> number"
+    },
+    {
+      "method_name": "math.deg",
+      "method_description": "Преобразование радиан в градусы.",
+      "method_realization": "math.deg(x) -> number"
+    },
+    {
+      "method_name": "math.exp",
+      "method_description": "Экспонента e^x.",
+      "method_realization": "math.exp(x) -> number"
+    },
+    {
+      "method_name": "math.floor",
+      "method_description": "Округление вниз.",
+      "method_realization": "math.floor(x) -> integer | float"
+    },
+    {
+      "method_name": "math.fmod",
+      "method_description": "Остаток деления.",
+      "method_realization": "math.fmod(x, y) -> number"
+    },
+    {
+      "method_name": "math.frexp",
+      "method_description": "Разложение числа на мантиссу и экспоненту.",
+      "method_realization": "math.frexp(x) -> m, e"
+    },
+    {
+      "method_name": "math.huge",
+      "method_description": "Положительная бесконечность.",
+      "method_realization": "math.huge -> number"
+    },
+    {
+      "method_name": "math.ldexp",
+      "method_description": "Собирает число из мантиссы и экспоненты.",
+      "method_realization": "math.ldexp(m, e) -> number"
+    },
+    {
+      "method_name": "math.log",
+      "method_description": "Логарифм, опционально по основанию.",
+      "method_realization": "math.log(x [, base]) -> number"
+    },
+    {
+      "method_name": "math.max",
+      "method_description": "Максимум из аргументов.",
+      "method_realization": "math.max(x, ...) -> value"
+    },
+    {
+      "method_name": "math.maxinteger",
+      "method_description": "Максимальное целое представимое значение.",
+      "method_realization": "math.maxinteger -> integer"
+    },
+    {
+      "method_name": "math.min",
+      "method_description": "Минимум из аргументов.",
+      "method_realization": "math.min(x, ...) -> value"
+    },
+    {
+      "method_name": "math.mininteger",
+      "method_description": "Минимальное целое представимое значение.",
+      "method_realization": "math.mininteger -> integer"
+    },
+    {
+      "method_name": "math.modf",
+      "method_description": "Целая и дробная часть числа.",
+      "method_realization": "math.modf(x) -> integer_part, fractional_part"
+    },
+    {
+      "method_name": "math.pi",
+      "method_description": "Число π.",
+      "method_realization": "math.pi -> number"
+    },
+    {
+      "method_name": "math.rad",
+      "method_description": "Преобразование градусов в радианы.",
+      "method_realization": "math.rad(x) -> number"
+    },
+    {
+      "method_name": "math.random",
+      "method_description": "Генератор случайных чисел/диапазонов.",
+      "method_realization": "math.random([m [, n]]) -> number"
+    },
+    {
+      "method_name": "math.randomseed",
+      "method_description": "Инициализация генератора случайных чисел.",
+      "method_realization": "math.randomseed(x [, y]) -> x, y"
+    },
+    {
+      "method_name": "math.sin",
+      "method_description": "Синус.",
+      "method_realization": "math.sin(x) -> number"
+    },
+    {
+      "method_name": "math.sqrt",
+      "method_description": "Квадратный корень.",
+      "method_realization": "math.sqrt(x) -> number"
+    },
+    {
+      "method_name": "math.tan",
+      "method_description": "Тангенс.",
+      "method_realization": "math.tan(x) -> number"
+    },
+    {
+      "method_name": "math.tointeger",
+      "method_description": "Безопасное преобразование в integer.",
+      "method_realization": "math.tointeger(x) -> integer | nil"
+    },
+    {
+      "method_name": "math.type",
+      "method_description": "Возвращает 'integer' или 'float' для числа.",
+      "method_realization": "math.type(x) -> string | nil"
+    },
+    {
+      "method_name": "math.ult",
+      "method_description": "Сравнение целых как беззнаковых.",
+      "method_realization": "math.ult(m, n) -> boolean"
+    },
+    {
+      "method_name": "io",
+      "method_description": "Библиотека ввода-вывода.",
+      "method_realization": "library: io"
+    },
+    {
+      "method_name": "io.close",
+      "method_description": "Закрывает файл по умолчанию или указанный дескриптор.",
+      "method_realization": "io.close([file]) -> ok | nil, err, code"
+    },
+    {
+      "method_name": "io.flush",
+      "method_description": "Сбрасывает буфер вывода по умолчанию.",
+      "method_realization": "io.flush() -> ok | nil, err, code"
+    },
+    {
+      "method_name": "io.input",
+      "method_description": "Возвращает или устанавливает входной файл по умолчанию.",
+      "method_realization": "io.input([file]) -> file"
+    },
+    {
+      "method_name": "io.lines",
+      "method_description": "Итератор чтения строк из файла.",
+      "method_realization": "io.lines([filename, ...]) -> iterator"
+    },
+    {
+      "method_name": "io.open",
+      "method_description": "Открывает файл.",
+      "method_realization": "io.open(filename [, mode]) -> file | nil, err, code"
+    },
+    {
+      "method_name": "io.output",
+      "method_description": "Возвращает или устанавливает выходной файл по умолчанию.",
+      "method_realization": "io.output([file]) -> file"
+    },
+    {
+      "method_name": "io.popen",
+      "method_description": "Открывает pipe к внешней команде.",
+      "method_realization": "io.popen(prog [, mode]) -> file"
+    },
+    {
+      "method_name": "io.read",
+      "method_description": "Читает данные из входного файла по умолчанию.",
+      "method_realization": "io.read(...) -> ..."
+    },
+    {
+      "method_name": "io.stderr",
+      "method_description": "Стандартный поток ошибок.",
+      "method_realization": "io.stderr -> file"
+    },
+    {
+      "method_name": "io.stdin",
+      "method_description": "Стандартный вход.",
+      "method_realization": "io.stdin -> file"
+    },
+    {
+      "method_name": "io.stdout",
+      "method_description": "Стандартный выход.",
+      "method_realization": "io.stdout -> file"
+    },
+    {
+      "method_name": "io.tmpfile",
+      "method_description": "Создает временный файл.",
+      "method_realization": "io.tmpfile() -> file"
+    },
+    {
+      "method_name": "io.type",
+      "method_description": "Возвращает тип файлового объекта.",
+      "method_realization": "io.type(obj) -> 'file' | 'closed file' | nil"
+    },
+    {
+      "method_name": "io.write",
+      "method_description": "Записывает данные в выходной файл по умолчанию.",
+      "method_realization": "io.write(...) -> ok | nil, err, code"
+    },
+    {
+      "method_name": "file:close",
+      "method_description": "Метод закрытия файлового объекта.",
+      "method_realization": "file:close() -> ok | nil, err, code"
+    },
+    {
+      "method_name": "file:flush",
+      "method_description": "Метод flush для файлового объекта.",
+      "method_realization": "file:flush() -> ok | nil, err, code"
+    },
+    {
+      "method_name": "file:lines",
+      "method_description": "Итератор чтения из файлового объекта.",
+      "method_realization": "file:lines(...) -> iterator"
+    },
+    {
+      "method_name": "file:read",
+      "method_description": "Чтение из файлового объекта.",
+      "method_realization": "file:read(...) -> ..."
+    },
+    {
+      "method_name": "file:seek",
+      "method_description": "Смена текущей позиции в файле.",
+      "method_realization": "file:seek([whence [, offset]]) -> pos | nil, err"
+    },
+    {
+      "method_name": "file:setvbuf",
+      "method_description": "Настройка буферизации файла.",
+      "method_realization": "file:setvbuf(mode [, size]) -> ok | nil, err"
+    },
+    {
+      "method_name": "file:write",
+      "method_description": "Запись в файловый объект.",
+      "method_realization": "file:write(...) -> file | nil, err, code"
+    },
+    {
+      "method_name": "os",
+      "method_description": "Библиотека доступа к системным функциям.",
+      "method_realization": "library: os"
+    },
+    {
+      "method_name": "os.clock",
+      "method_description": "Процессорное время программы.",
+      "method_realization": "os.clock() -> number"
+    },
+    {
+      "method_name": "os.date",
+      "method_description": "Форматированная дата/время.",
+      "method_realization": "os.date([format [, time]]) -> string | table"
+    },
+    {
+      "method_name": "os.difftime",
+      "method_description": "Разница между двумя временами.",
+      "method_realization": "os.difftime(t2, t1) -> number"
+    },
+    {
+      "method_name": "os.execute",
+      "method_description": "Выполняет системную команду.",
+      "method_realization": "os.execute([command]) -> ok, reason, code"
+    },
+    {
+      "method_name": "os.exit",
+      "method_description": "Завершает программу.",
+      "method_realization": "os.exit([code [, close]])"
+    },
+    {
+      "method_name": "os.getenv",
+      "method_description": "Читает переменную окружения.",
+      "method_realization": "os.getenv(varname) -> string | nil"
+    },
+    {
+      "method_name": "os.remove",
+      "method_description": "Удаляет файл или директорию.",
+      "method_realization": "os.remove(filename) -> ok | nil, err, code"
+    },
+    {
+      "method_name": "os.rename",
+      "method_description": "Переименовывает файл или директорию.",
+      "method_realization": "os.rename(oldname, newname) -> ok | nil, err, code"
+    },
+    {
+      "method_name": "os.setlocale",
+      "method_description": "Устанавливает locale.",
+      "method_realization": "os.setlocale(locale [, category]) -> string | nil"
+    },
+    {
+      "method_name": "os.time",
+      "method_description": "Преобразует таблицу даты во время или возвращает текущее время.",
+      "method_realization": "os.time([table]) -> integer"
+    },
+    {
+      "method_name": "os.tmpname",
+      "method_description": "Создает уникальное временное имя файла.",
+      "method_realization": "os.tmpname() -> string"
+    },
+    {
+      "method_name": "debug",
+      "method_description": "Библиотека отладки и интроспекции.",
+      "method_realization": "library: debug"
+    },
+    {
+      "method_name": "debug.debug",
+      "method_description": "Запускает простой REPL отладки.",
+      "method_realization": "debug.debug()"
+    },
+    {
+      "method_name": "debug.gethook",
+      "method_description": "Возвращает текущий hook потока.",
+      "method_realization": "debug.gethook([thread]) -> hook, mask, count"
+    },
+    {
+      "method_name": "debug.getinfo",
+      "method_description": "Информация о функции или уровне стека.",
+      "method_realization": "debug.getinfo([thread,] f_or_level [, what]) -> table"
+    },
+    {
+      "method_name": "debug.getlocal",
+      "method_description": "Читает локальную переменную по уровню стека.",
+      "method_realization": "debug.getlocal([thread,] level, localno) -> name, value"
+    },
+    {
+      "method_name": "debug.getmetatable",
+      "method_description": "Читает метатаблицу значения без ограничений базовой библиотеки.",
+      "method_realization": "debug.getmetatable(value) -> metatable"
+    },
+    {
+      "method_name": "debug.getregistry",
+      "method_description": "Возвращает registry Lua.",
+      "method_realization": "debug.getregistry() -> table"
+    },
+    {
+      "method_name": "debug.getupvalue",
+      "method_description": "Читает upvalue функции.",
+      "method_realization": "debug.getupvalue(f, up) -> name, value"
+    },
+    {
+      "method_name": "debug.getuservalue",
+      "method_description": "Читает user value userdata.",
+      "method_realization": "debug.getuservalue(u [, n]) -> value"
+    },
+    {
+      "method_name": "debug.sethook",
+      "method_description": "Устанавливает hook на вызовы, возвраты, строки или count.",
+      "method_realization": "debug.sethook([thread,] hook, mask [, count])"
+    },
+    {
+      "method_name": "debug.setlocal",
+      "method_description": "Меняет локальную переменную по уровню стека.",
+      "method_realization": "debug.setlocal([thread,] level, localno, value) -> name"
+    },
+    {
+      "method_name": "debug.setmetatable",
+      "method_description": "Устанавливает метатаблицу значения через debug API.",
+      "method_realization": "debug.setmetatable(value, table) -> value"
+    },
+    {
+      "method_name": "debug.setupvalue",
+      "method_description": "Меняет upvalue функции.",
+      "method_realization": "debug.setupvalue(f, up, value) -> name"
+    },
+    {
+      "method_name": "debug.setuservalue",
+      "method_description": "Записывает user value userdata.",
+      "method_realization": "debug.setuservalue(udata, value [, n]) -> udata"
+    },
+    {
+      "method_name": "debug.traceback",
+      "method_description": "Строит стек-трейс.",
+      "method_realization": "debug.traceback([thread,] [message [, level]]) -> string"
+    },
+    {
+      "method_name": "debug.upvalueid",
+      "method_description": "Идентификатор upvalue для сравнения замыканий.",
+      "method_realization": "debug.upvalueid(f, n) -> lightuserdata"
+    },
+    {
+      "method_name": "debug.upvaluejoin",
+      "method_description": "Заставляет функции разделять один и тот же upvalue.",
+      "method_realization": "debug.upvaluejoin(f1, n1, f2, n2)"
+    },
+    {
+      "method_name": "LUA_CPATH",
+      "method_description": "Переменная окружения для пути поиска C-модулей.",
+      "method_realization": "env: LUA_CPATH"
+    },
+    {
+      "method_name": "LUA_CPATH_5_5",
+      "method_description": "Версионный вариант пути поиска C-модулей для Lua 5.5.",
+      "method_realization": "env: LUA_CPATH_5_5"
+    },
+    {
+      "method_name": "LUA_INIT",
+      "method_description": "Код или файл инициализации для запуска Lua.",
+      "method_realization": "env: LUA_INIT"
+    },
+    {
+      "method_name": "LUA_INIT_5_5",
+      "method_description": "Версионный вариант переменной инициализации для Lua 5.5.",
+      "method_realization": "env: LUA_INIT_5_5"
+    },
+    {
+      "method_name": "LUA_PATH",
+      "method_description": "Переменная окружения для пути поиска Lua-модулей.",
+      "method_realization": "env: LUA_PATH"
+    },
+    {
+      "method_name": "LUA_PATH_5_5",
+      "method_description": "Версионный вариант пути поиска Lua-модулей для Lua 5.5.",
+      "method_realization": "env: LUA_PATH_5_5"
+    },
+    {
+      "method_name": "lua_Alloc",
+      "method_description": "Тип функции аллокатора памяти Lua.",
+      "method_realization": "typedef void *(*lua_Alloc)(void *ud, void *ptr, size_t osize, size_t nsize)"
+    },
+    {
+      "method_name": "lua_CFunction",
+      "method_description": "Тип C-функции, вызываемой Lua.",
+      "method_realization": "typedef int (*lua_CFunction)(lua_State *L)"
+    },
+    {
+      "method_name": "lua_Debug",
+      "method_description": "Структура отладочной информации о функциях и стеке.",
+      "method_realization": "type: struct lua_Debug"
+    },
+    {
+      "method_name": "lua_Hook",
+      "method_description": "Тип debug-hook функции.",
+      "method_realization": "typedef void (*lua_Hook)(lua_State *L, lua_Debug *ar)"
+    },
+    {
+      "method_name": "lua_Integer",
+      "method_description": "Целочисленный тип Lua C API.",
+      "method_realization": "typedef signed integer type"
+    },
+    {
+      "method_name": "lua_KContext",
+      "method_description": "Контекст продолжения для continuation-функций.",
+      "method_realization": "typedef intptr-like integral type"
+    },
+    {
+      "method_name": "lua_KFunction",
+      "method_description": "Тип continuation-функции для yieldable C calls.",
+      "method_realization": "typedef int (*lua_KFunction)(lua_State *L, int status, lua_KContext ctx)"
+    },
+    {
+      "method_name": "lua_Number",
+      "method_description": "Вещественный тип Lua C API.",
+      "method_realization": "typedef floating-point type"
+    },
+    {
+      "method_name": "lua_Reader",
+      "method_description": "Тип reader callback для lua_load.",
+      "method_realization": "typedef const char *(*lua_Reader)(lua_State *L, void *data, size_t *size)"
+    },
+    {
+      "method_name": "lua_State",
+      "method_description": "Непрозрачная структура состояния Lua.",
+      "method_realization": "type: lua_State"
+    },
+    {
+      "method_name": "lua_Unsigned",
+      "method_description": "Беззнаковый целочисленный тип Lua.",
+      "method_realization": "typedef unsigned integer type"
+    },
+    {
+      "method_name": "lua_WarnFunction",
+      "method_description": "Тип warning callback.",
+      "method_realization": "typedef void (*lua_WarnFunction)(void *ud, const char *msg, int tocont)"
+    },
+    {
+      "method_name": "lua_Writer",
+      "method_description": "Тип writer callback для lua_dump.",
+      "method_realization": "typedef int (*lua_Writer)(lua_State *L, const void *p, size_t sz, void *ud)"
+    },
+    {
+      "method_name": "lua_absindex",
+      "method_description": "Преобразует допустимый индекс стека в абсолютный.",
+      "method_realization": "lua_absindex(...)"
+    },
+    {
+      "method_name": "lua_arith",
+      "method_description": "Выполняет арифметическую или побитовую операцию над значениями на стеке.",
+      "method_realization": "lua_arith(...)"
+    },
+    {
+      "method_name": "lua_atpanic",
+      "method_description": "Устанавливает panic-функцию состояния Lua.",
+      "method_realization": "lua_atpanic(...)"
+    },
+    {
+      "method_name": "lua_call",
+      "method_description": "Вызывает функцию в стеке без защищенного режима.",
+      "method_realization": "lua_call(...)"
+    },
+    {
+      "method_name": "lua_callk",
+      "method_description": "Yield-aware вариант lua_call с continuation.",
+      "method_realization": "lua_callk(...)"
+    },
+    {
+      "method_name": "lua_checkstack",
+      "method_description": "Гарантирует наличие дополнительного места в стеке.",
+      "method_realization": "lua_checkstack(...)"
+    },
+    {
+      "method_name": "lua_close",
+      "method_description": "Закрывает состояние Lua и освобождает все ресурсы.",
+      "method_realization": "lua_close(...)"
+    },
+    {
+      "method_name": "lua_closeslot",
+      "method_description": "Закрывает to-be-closed слот в стеке.",
+      "method_realization": "lua_closeslot(...)"
+    },
+    {
+      "method_name": "lua_closethread",
+      "method_description": "Закрывает корутину и связанные ресурсы.",
+      "method_realization": "lua_closethread(...)"
+    },
+    {
+      "method_name": "lua_compare",
+      "method_description": "Сравнивает два значения на стеке по операции ==, < или <=.",
+      "method_realization": "lua_compare(...)"
+    },
+    {
+      "method_name": "lua_concat",
+      "method_description": "Конкатенирует несколько верхних значений стека.",
+      "method_realization": "lua_concat(...)"
+    },
+    {
+      "method_name": "lua_copy",
+      "method_description": "Копирует значение из одного индекса стека в другой.",
+      "method_realization": "lua_copy(...)"
+    },
+    {
+      "method_name": "lua_createtable",
+      "method_description": "Создает новую таблицу с подсказками емкости.",
+      "method_realization": "lua_createtable(...)"
+    },
+    {
+      "method_name": "lua_dump",
+      "method_description": "Дампит скомпилированную функцию в бинарный chunk.",
+      "method_realization": "lua_dump(...)"
+    },
+    {
+      "method_name": "lua_error",
+      "method_description": "Поднимает ошибку с объектом на вершине стека.",
+      "method_realization": "lua_error(...)"
+    },
+    {
+      "method_name": "lua_gc",
+      "method_description": "Низкоуровневый интерфейс управления сборщиком мусора.",
+      "method_realization": "lua_gc(...)"
+    },
+    {
+      "method_name": "lua_getallocf",
+      "method_description": "Возвращает текущий аллокатор и его userdata.",
+      "method_realization": "lua_getallocf(...)"
+    },
+    {
+      "method_name": "lua_getextraspace",
+      "method_description": "Возвращает указатель на extra space состояния.",
+      "method_realization": "lua_getextraspace(...)"
+    },
+    {
+      "method_name": "lua_getfield",
+      "method_description": "Читает поле таблицы по строковому ключу.",
+      "method_realization": "lua_getfield(...)"
+    },
+    {
+      "method_name": "lua_getglobal",
+      "method_description": "Читает глобальную переменную по имени.",
+      "method_realization": "lua_getglobal(...)"
+    },
+    {
+      "method_name": "lua_gethook",
+      "method_description": "Возвращает текущую hook-функцию.",
+      "method_realization": "lua_gethook(...)"
+    },
+    {
+      "method_name": "lua_gethookcount",
+      "method_description": "Возвращает count для hook.",
+      "method_realization": "lua_gethookcount(...)"
+    },
+    {
+      "method_name": "lua_gethookmask",
+      "method_description": "Возвращает mask текущего hook.",
+      "method_realization": "lua_gethookmask(...)"
+    },
+    {
+      "method_name": "lua_geti",
+      "method_description": "Читает поле таблицы по целочисленному индексу.",
+      "method_realization": "lua_geti(...)"
+    },
+    {
+      "method_name": "lua_getinfo",
+      "method_description": "Получает отладочную информацию о функции/стеке.",
+      "method_realization": "lua_getinfo(...)"
+    },
+    {
+      "method_name": "lua_getiuservalue",
+      "method_description": "Читает n-й user value из userdata.",
+      "method_realization": "lua_getiuservalue(...)"
+    },
+    {
+      "method_name": "lua_getlocal",
+      "method_description": "Читает локальную переменную stack frame.",
+      "method_realization": "lua_getlocal(...)"
+    },
+    {
+      "method_name": "lua_getmetatable",
+      "method_description": "Помещает метатаблицу значения на стек.",
+      "method_realization": "lua_getmetatable(...)"
+    },
+    {
+      "method_name": "lua_getstack",
+      "method_description": "Получает информацию о stack frame.",
+      "method_realization": "lua_getstack(...)"
+    },
+    {
+      "method_name": "lua_gettable",
+      "method_description": "Читает поле таблицы по ключу на стеке с учетом метаметодов.",
+      "method_realization": "lua_gettable(...)"
+    },
+    {
+      "method_name": "lua_gettop",
+      "method_description": "Возвращает индекс вершины стека.",
+      "method_realization": "lua_gettop(...)"
+    },
+    {
+      "method_name": "lua_getupvalue",
+      "method_description": "Читает upvalue функции.",
+      "method_realization": "lua_getupvalue(...)"
+    },
+    {
+      "method_name": "lua_insert",
+      "method_description": "Перемещает верхнее значение в указанную позицию.",
+      "method_realization": "lua_insert(...)"
+    },
+    {
+      "method_name": "lua_isboolean",
+      "method_description": "Проверяет, что значение имеет тип boolean.",
+      "method_realization": "lua_isboolean(...)"
+    },
+    {
+      "method_name": "lua_iscfunction",
+      "method_description": "Проверяет, что значение является C-функцией.",
+      "method_realization": "lua_iscfunction(...)"
+    },
+    {
+      "method_name": "lua_isfunction",
+      "method_description": "Проверяет, что значение является функцией.",
+      "method_realization": "lua_isfunction(...)"
+    },
+    {
+      "method_name": "lua_isinteger",
+      "method_description": "Проверяет, что значение является integer-числом.",
+      "method_realization": "lua_isinteger(...)"
+    },
+    {
+      "method_name": "lua_islightuserdata",
+      "method_description": "Проверяет, что значение является light userdata.",
+      "method_realization": "lua_islightuserdata(...)"
+    },
+    {
+      "method_name": "lua_isnil",
+      "method_description": "Проверяет, что значение равно nil.",
+      "method_realization": "lua_isnil(...)"
+    },
+    {
+      "method_name": "lua_isnone",
+      "method_description": "Проверяет, что индекс вне допустимого диапазона стека.",
+      "method_realization": "lua_isnone(...)"
+    },
+    {
+      "method_name": "lua_isnoneornil",
+      "method_description": "Проверяет, что индекс пустой или значение nil.",
+      "method_realization": "lua_isnoneornil(...)"
+    },
+    {
+      "method_name": "lua_isnumber",
+      "method_description": "Проверяет, что значение является числом или приводимо к числу.",
+      "method_realization": "lua_isnumber(...)"
+    },
+    {
+      "method_name": "lua_isstring",
+      "method_description": "Проверяет, что значение строка или число, приводимое к строке.",
+      "method_realization": "lua_isstring(...)"
+    },
+    {
+      "method_name": "lua_istable",
+      "method_description": "Проверяет, что значение является таблицей.",
+      "method_realization": "lua_istable(...)"
+    },
+    {
+      "method_name": "lua_isthread",
+      "method_description": "Проверяет, что значение является потоком.",
+      "method_realization": "lua_isthread(...)"
+    },
+    {
+      "method_name": "lua_isuserdata",
+      "method_description": "Проверяет, что значение является userdata.",
+      "method_realization": "lua_isuserdata(...)"
+    },
+    {
+      "method_name": "lua_isyieldable",
+      "method_description": "Проверяет, можно ли yield из текущего состояния.",
+      "method_realization": "lua_isyieldable(...)"
+    },
+    {
+      "method_name": "lua_len",
+      "method_description": "Вычисляет длину значения через #.",
+      "method_realization": "lua_len(...)"
+    },
+    {
+      "method_name": "lua_load",
+      "method_description": "Загружает chunk через reader callback.",
+      "method_realization": "lua_load(...)"
+    },
+    {
+      "method_name": "lua_newstate",
+      "method_description": "Создает новое состояние Lua с указанным аллокатором.",
+      "method_realization": "lua_newstate(...)"
+    },
+    {
+      "method_name": "lua_newtable",
+      "method_description": "Создает новую пустую таблицу.",
+      "method_realization": "lua_newtable(...)"
+    },
+    {
+      "method_name": "lua_newthread",
+      "method_description": "Создает новую корутину/поток Lua.",
+      "method_realization": "lua_newthread(...)"
+    },
+    {
+      "method_name": "lua_newuserdatauv",
+      "method_description": "Создает full userdata с заданным числом user values.",
+      "method_realization": "lua_newuserdatauv(...)"
+    },
+    {
+      "method_name": "lua_next",
+      "method_description": "Итерирует по следующей паре таблицы.",
+      "method_realization": "lua_next(...)"
+    },
+    {
+      "method_name": "lua_numbertocstring",
+      "method_description": "Преобразует lua_Number в C-строку в буфере пользователя.",
+      "method_realization": "lua_numbertocstring(...)"
+    },
+    {
+      "method_name": "lua_numbertointeger",
+      "method_description": "Пытается безопасно преобразовать lua_Number в lua_Integer.",
+      "method_realization": "lua_numbertointeger(...)"
+    },
+    {
+      "method_name": "lua_pcall",
+      "method_description": "Защищенный вызов функции.",
+      "method_realization": "lua_pcall(...)"
+    },
+    {
+      "method_name": "lua_pcallk",
+      "method_description": "Yield-aware вариант защищенного вызова.",
+      "method_realization": "lua_pcallk(...)"
+    },
+    {
+      "method_name": "lua_pop",
+      "method_description": "Удаляет n верхних значений стека.",
+      "method_realization": "lua_pop(...)"
+    },
+    {
+      "method_name": "lua_pushboolean",
+      "method_description": "Помещает boolean на стек.",
+      "method_realization": "lua_pushboolean(...)"
+    },
+    {
+      "method_name": "lua_pushcclosure",
+      "method_description": "Помещает C-замыкание с upvalues на стек.",
+      "method_realization": "lua_pushcclosure(...)"
+    },
+    {
+      "method_name": "lua_pushcfunction",
+      "method_description": "Помещает C-функцию на стек.",
+      "method_realization": "lua_pushcfunction(...)"
+    },
+    {
+      "method_name": "lua_pushexternalstring",
+      "method_description": "Помещает внешнюю строку с памятью под контролем пользователя.",
+      "method_realization": "lua_pushexternalstring(...)"
+    },
+    {
+      "method_name": "lua_pushfstring",
+      "method_description": "Форматирует и помещает строку на стек.",
+      "method_realization": "lua_pushfstring(...)"
+    },
+    {
+      "method_name": "lua_pushglobaltable",
+      "method_description": "Помещает глобальную таблицу на стек.",
+      "method_realization": "lua_pushglobaltable(...)"
+    },
+    {
+      "method_name": "lua_pushinteger",
+      "method_description": "Помещает integer на стек.",
+      "method_realization": "lua_pushinteger(...)"
+    },
+    {
+      "method_name": "lua_pushlightuserdata",
+      "method_description": "Помещает light userdata на стек.",
+      "method_realization": "lua_pushlightuserdata(...)"
+    },
+    {
+      "method_name": "lua_pushliteral",
+      "method_description": "Помещает литеральную C-строку на стек.",
+      "method_realization": "lua_pushliteral(...)"
+    },
+    {
+      "method_name": "lua_pushlstring",
+      "method_description": "Помещает строку заданной длины на стек.",
+      "method_realization": "lua_pushlstring(...)"
+    },
+    {
+      "method_name": "lua_pushnil",
+      "method_description": "Помещает nil на стек.",
+      "method_realization": "lua_pushnil(...)"
+    },
+    {
+      "method_name": "lua_pushnumber",
+      "method_description": "Помещает число с плавающей точкой на стек.",
+      "method_realization": "lua_pushnumber(...)"
+    },
+    {
+      "method_name": "lua_pushstring",
+      "method_description": "Помещает zero-terminated C-строку на стек.",
+      "method_realization": "lua_pushstring(...)"
+    },
+    {
+      "method_name": "lua_pushthread",
+      "method_description": "Помещает текущий поток на стек.",
+      "method_realization": "lua_pushthread(...)"
+    },
+    {
+      "method_name": "lua_pushvalue",
+      "method_description": "Копирует существующее значение на вершину стека.",
+      "method_realization": "lua_pushvalue(...)"
+    },
+    {
+      "method_name": "lua_pushvfstring",
+      "method_description": "Форматирует строку из va_list и помещает на стек.",
+      "method_realization": "lua_pushvfstring(...)"
+    },
+    {
+      "method_name": "lua_rawequal",
+      "method_description": "Сравнивает значения без метаметодов.",
+      "method_realization": "lua_rawequal(...)"
+    },
+    {
+      "method_name": "lua_rawget",
+      "method_description": "Читает поле таблицы без метаметодов.",
+      "method_realization": "lua_rawget(...)"
+    },
+    {
+      "method_name": "lua_rawgeti",
+      "method_description": "Читает целочисленное поле таблицы без метаметодов.",
+      "method_realization": "lua_rawgeti(...)"
+    },
+    {
+      "method_name": "lua_rawgetp",
+      "method_description": "Читает поле таблицы по pointer-key без метаметодов.",
+      "method_realization": "lua_rawgetp(...)"
+    },
+    {
+      "method_name": "lua_rawlen",
+      "method_description": "Возвращает raw length строки, userdata или таблицы.",
+      "method_realization": "lua_rawlen(...)"
+    },
+    {
+      "method_name": "lua_rawset",
+      "method_description": "Пишет поле таблицы без метаметодов.",
+      "method_realization": "lua_rawset(...)"
+    },
+    {
+      "method_name": "lua_rawseti",
+      "method_description": "Пишет целочисленное поле таблицы без метаметодов.",
+      "method_realization": "lua_rawseti(...)"
+    },
+    {
+      "method_name": "lua_rawsetp",
+      "method_description": "Пишет pointer-key поле таблицы без метаметодов.",
+      "method_realization": "lua_rawsetp(...)"
+    },
+    {
+      "method_name": "lua_register",
+      "method_description": "Регистрирует C-функцию как глобальную переменную.",
+      "method_realization": "lua_register(...)"
+    },
+    {
+      "method_name": "lua_remove",
+      "method_description": "Удаляет значение по индексу, сдвигая верхнюю часть стека.",
+      "method_realization": "lua_remove(...)"
+    },
+    {
+      "method_name": "lua_replace",
+      "method_description": "Заменяет значение по индексу верхним элементом стека.",
+      "method_realization": "lua_replace(...)"
+    },
+    {
+      "method_name": "lua_resume",
+      "method_description": "Продолжает корутину.",
+      "method_realization": "lua_resume(...)"
+    },
+    {
+      "method_name": "lua_rotate",
+      "method_description": "Циклически вращает фрагмент стека.",
+      "method_realization": "lua_rotate(...)"
+    },
+    {
+      "method_name": "lua_setallocf",
+      "method_description": "Устанавливает новый аллокатор состояния.",
+      "method_realization": "lua_setallocf(...)"
+    },
+    {
+      "method_name": "lua_setfield",
+      "method_description": "Пишет поле таблицы по строковому ключу.",
+      "method_realization": "lua_setfield(...)"
+    },
+    {
+      "method_name": "lua_setglobal",
+      "method_description": "Пишет глобальную переменную по имени.",
+      "method_realization": "lua_setglobal(...)"
+    },
+    {
+      "method_name": "lua_sethook",
+      "method_description": "Устанавливает debug hook.",
+      "method_realization": "lua_sethook(...)"
+    },
+    {
+      "method_name": "lua_seti",
+      "method_description": "Пишет поле таблицы по целочисленному индексу.",
+      "method_realization": "lua_seti(...)"
+    },
+    {
+      "method_name": "lua_setiuservalue",
+      "method_description": "Записывает n-й user value в userdata.",
+      "method_realization": "lua_setiuservalue(...)"
+    },
+    {
+      "method_name": "lua_setlocal",
+      "method_description": "Устанавливает локальную переменную стека.",
+      "method_realization": "lua_setlocal(...)"
+    },
+    {
+      "method_name": "lua_setmetatable",
+      "method_description": "Устанавливает метатаблицу значения.",
+      "method_realization": "lua_setmetatable(...)"
+    },
+    {
+      "method_name": "lua_settable",
+      "method_description": "Пишет поле таблицы по ключу на стеке с учетом метаметодов.",
+      "method_realization": "lua_settable(...)"
+    },
+    {
+      "method_name": "lua_settop",
+      "method_description": "Устанавливает новую вершину стека.",
+      "method_realization": "lua_settop(...)"
+    },
+    {
+      "method_name": "lua_setupvalue",
+      "method_description": "Записывает upvalue функции.",
+      "method_realization": "lua_setupvalue(...)"
+    },
+    {
+      "method_name": "lua_setwarnf",
+      "method_description": "Устанавливает warning callback.",
+      "method_realization": "lua_setwarnf(...)"
+    },
+    {
+      "method_name": "lua_status",
+      "method_description": "Возвращает статус потока.",
+      "method_realization": "lua_status(...)"
+    },
+    {
+      "method_name": "lua_stringtonumber",
+      "method_description": "Преобразует строку в число и кладет результат на стек.",
+      "method_realization": "lua_stringtonumber(...)"
+    },
+    {
+      "method_name": "lua_toboolean",
+      "method_description": "Преобразует значение к boolean по правилам Lua.",
+      "method_realization": "lua_toboolean(...)"
+    },
+    {
+      "method_name": "lua_tocfunction",
+      "method_description": "Возвращает C-функцию из значения-функции.",
+      "method_realization": "lua_tocfunction(...)"
+    },
+    {
+      "method_name": "lua_toclose",
+      "method_description": "Помечает слот стека как to-be-closed.",
+      "method_realization": "lua_toclose(...)"
+    },
+    {
+      "method_name": "lua_tointeger",
+      "method_description": "Преобразует значение к integer.",
+      "method_realization": "lua_tointeger(...)"
+    },
+    {
+      "method_name": "lua_tointegerx",
+      "method_description": "Преобразует значение к integer с флагом успеха.",
+      "method_realization": "lua_tointegerx(...)"
+    },
+    {
+      "method_name": "lua_tolstring",
+      "method_description": "Преобразует значение к строке и возвращает указатель/длину.",
+      "method_realization": "lua_tolstring(...)"
+    },
+    {
+      "method_name": "lua_tonumber",
+      "method_description": "Преобразует значение к lua_Number.",
+      "method_realization": "lua_tonumber(...)"
+    },
+    {
+      "method_name": "lua_tonumberx",
+      "method_description": "Преобразует значение к lua_Number с флагом успеха.",
+      "method_realization": "lua_tonumberx(...)"
+    },
+    {
+      "method_name": "lua_topointer",
+      "method_description": "Возвращает стабильный pointer-идентификатор объекта.",
+      "method_realization": "lua_topointer(...)"
+    },
+    {
+      "method_name": "lua_tostring",
+      "method_description": "Удобный макрос над lua_tolstring.",
+      "method_realization": "lua_tostring(...)"
+    },
+    {
+      "method_name": "lua_tothread",
+      "method_description": "Возвращает поток из значения.",
+      "method_realization": "lua_tothread(...)"
+    },
+    {
+      "method_name": "lua_touserdata",
+      "method_description": "Возвращает userdata/lightuserdata pointer.",
+      "method_realization": "lua_touserdata(...)"
+    },
+    {
+      "method_name": "lua_type",
+      "method_description": "Возвращает код типа значения по индексу.",
+      "method_realization": "lua_type(...)"
+    },
+    {
+      "method_name": "lua_typename",
+      "method_description": "Возвращает имя типа по коду типа.",
+      "method_realization": "lua_typename(...)"
+    },
+    {
+      "method_name": "lua_upvalueid",
+      "method_description": "Возвращает идентификатор upvalue.",
+      "method_realization": "lua_upvalueid(...)"
+    },
+    {
+      "method_name": "lua_upvalueindex",
+      "method_description": "Специальный индекс для n-го upvalue C-замыкания.",
+      "method_realization": "lua_upvalueindex(...)"
+    },
+    {
+      "method_name": "lua_upvaluejoin",
+      "method_description": "Делает два upvalue общими.",
+      "method_realization": "lua_upvaluejoin(...)"
+    },
+    {
+      "method_name": "lua_version",
+      "method_description": "Возвращает версию Lua для состояния.",
+      "method_realization": "lua_version(...)"
+    },
+    {
+      "method_name": "lua_warning",
+      "method_description": "Вызывает warning callback.",
+      "method_realization": "lua_warning(...)"
+    },
+    {
+      "method_name": "lua_xmove",
+      "method_description": "Перемещает значения между двумя потоками одного состояния.",
+      "method_realization": "lua_xmove(...)"
+    },
+    {
+      "method_name": "lua_yield",
+      "method_description": "Приостанавливает текущий поток из C.",
+      "method_realization": "lua_yield(...)"
+    },
+    {
+      "method_name": "lua_yieldk",
+      "method_description": "Yield-aware вариант с continuation.",
+      "method_realization": "lua_yieldk(...)"
+    },
+    {
+      "method_name": "luaL_Buffer",
+      "method_description": "Структура буфера для эффективной сборки строк в auxiliary library.",
+      "method_realization": "type: luaL_Buffer"
+    },
+    {
+      "method_name": "luaL_Reg",
+      "method_description": "Структура пары 'имя + C-функция' для регистрации библиотек.",
+      "method_realization": "type: luaL_Reg"
+    },
+    {
+      "method_name": "luaL_Stream",
+      "method_description": "Структура userdata-обертки для FILE* в io library.",
+      "method_realization": "type: luaL_Stream"
+    },
+    {
+      "method_name": "luaL_addchar",
+      "method_description": "Добавляет один символ в luaL_Buffer.",
+      "method_realization": "luaL_addchar(B, c)"
+    },
+    {
+      "method_name": "luaL_addgsub",
+      "method_description": "Добавляет в буфер строку с заменой подстроки.",
+      "method_realization": "luaL_addgsub(B, s, p, r)"
+    },
+    {
+      "method_name": "luaL_addlstring",
+      "method_description": "Добавляет строку заданной длины в буфер.",
+      "method_realization": "luaL_addlstring(B, s, l)"
+    },
+    {
+      "method_name": "luaL_addsize",
+      "method_description": "Сообщает буферу, сколько байтов было записано напрямую.",
+      "method_realization": "luaL_addsize(B, s)"
+    },
+    {
+      "method_name": "luaL_addstring",
+      "method_description": "Добавляет zero-terminated строку в буфер.",
+      "method_realization": "luaL_addstring(B, s)"
+    },
+    {
+      "method_name": "luaL_addvalue",
+      "method_description": "Добавляет строковое значение с вершины стека в буфер.",
+      "method_realization": "luaL_addvalue(B)"
+    },
+    {
+      "method_name": "luaL_alloc",
+      "method_description": "Вспомогательный аллокатор auxiliary library.",
+      "method_realization": "luaL_alloc(...)"
+    },
+    {
+      "method_name": "luaL_argcheck",
+      "method_description": "Проверяет условие аргумента и генерирует ошибку при нарушении.",
+      "method_realization": "luaL_argcheck(L, cond, arg, extramsg)"
+    },
+    {
+      "method_name": "luaL_argerror",
+      "method_description": "Генерирует ошибку о плохом аргументе функции.",
+      "method_realization": "luaL_argerror(L, arg, extramsg)"
+    },
+    {
+      "method_name": "luaL_argexpected",
+      "method_description": "Генерирует ошибку о типе/ожидании аргумента.",
+      "method_realization": "luaL_argexpected(L, cond, arg, tname)"
+    },
+    {
+      "method_name": "luaL_buffaddr",
+      "method_description": "Возвращает адрес внутреннего буфера.",
+      "method_realization": "luaL_buffaddr(B) -> char*"
+    },
+    {
+      "method_name": "luaL_buffinit",
+      "method_description": "Инициализирует luaL_Buffer.",
+      "method_realization": "luaL_buffinit(L, B)"
+    },
+    {
+      "method_name": "luaL_buffinitsize",
+      "method_description": "Инициализирует буфер и резервирует размер.",
+      "method_realization": "luaL_buffinitsize(L, B, sz) -> char*"
+    },
+    {
+      "method_name": "luaL_bufflen",
+      "method_description": "Текущая длина накопленного буфера.",
+      "method_realization": "luaL_bufflen(B) -> size_t"
+    },
+    {
+      "method_name": "luaL_buffsub",
+      "method_description": "Уменьшает размер буфера на n байт.",
+      "method_realization": "luaL_buffsub(B, n)"
+    },
+    {
+      "method_name": "luaL_callmeta",
+      "method_description": "Вызывает метаметод объекта по имени.",
+      "method_realization": "luaL_callmeta(L, obj, e) -> int"
+    },
+    {
+      "method_name": "luaL_checkany",
+      "method_description": "Проверяет наличие аргумента.",
+      "method_realization": "luaL_checkany(L, arg)"
+    },
+    {
+      "method_name": "luaL_checkinteger",
+      "method_description": "Проверяет и получает integer аргумент.",
+      "method_realization": "luaL_checkinteger(L, arg) -> lua_Integer"
+    },
+    {
+      "method_name": "luaL_checklstring",
+      "method_description": "Проверяет и получает строковый аргумент с длиной.",
+      "method_realization": "luaL_checklstring(L, arg, len) -> const char*"
+    },
+    {
+      "method_name": "luaL_checknumber",
+      "method_description": "Проверяет и получает числовой аргумент.",
+      "method_realization": "luaL_checknumber(L, arg) -> lua_Number"
+    },
+    {
+      "method_name": "luaL_checkoption",
+      "method_description": "Проверяет строковый аргумент против списка опций.",
+      "method_realization": "luaL_checkoption(L, arg, def, lst) -> int"
+    },
+    {
+      "method_name": "luaL_checkstack",
+      "method_description": "Проверяет место в стеке, иначе выбрасывает ошибку.",
+      "method_realization": "luaL_checkstack(L, sz, msg)"
+    },
+    {
+      "method_name": "luaL_checkstring",
+      "method_description": "Проверяет и получает строковый аргумент.",
+      "method_realization": "luaL_checkstring(L, arg) -> const char*"
+    },
+    {
+      "method_name": "luaL_checktype",
+      "method_description": "Проверяет точный тип аргумента.",
+      "method_realization": "luaL_checktype(L, arg, t)"
+    },
+    {
+      "method_name": "luaL_checkudata",
+      "method_description": "Проверяет userdata нужной метатаблицы.",
+      "method_realization": "luaL_checkudata(L, arg, tname) -> void*"
+    },
+    {
+      "method_name": "luaL_checkversion",
+      "method_description": "Проверяет совместимость версии и числовых типов.",
+      "method_realization": "luaL_checkversion(L)"
+    },
+    {
+      "method_name": "luaL_dofile",
+      "method_description": "Загружает и выполняет Lua-файл.",
+      "method_realization": "luaL_dofile(L, filename) -> status"
+    },
+    {
+      "method_name": "luaL_dostring",
+      "method_description": "Загружает и выполняет Lua-строку.",
+      "method_realization": "luaL_dostring(L, str) -> status"
+    },
+    {
+      "method_name": "luaL_error",
+      "method_description": "Генерирует formatted error.",
+      "method_realization": "luaL_error(L, fmt, ...) -> int"
+    },
+    {
+      "method_name": "luaL_execresult",
+      "method_description": "Преобразует результат os.execute в возвращаемые значения Lua.",
+      "method_realization": "luaL_execresult(L, stat) -> int"
+    },
+    {
+      "method_name": "luaL_fileresult",
+      "method_description": "Преобразует результат файловой операции C в значения Lua.",
+      "method_realization": "luaL_fileresult(L, stat [, fname]) -> int"
+    },
+    {
+      "method_name": "luaL_getmetafield",
+      "method_description": "Читает поле метатаблицы объекта.",
+      "method_realization": "luaL_getmetafield(L, obj, e) -> int"
+    },
+    {
+      "method_name": "luaL_getmetatable",
+      "method_description": "Помещает на стек зарегистрированную метатаблицу по имени.",
+      "method_realization": "luaL_getmetatable(L, tname)"
+    },
+    {
+      "method_name": "luaL_getsubtable",
+      "method_description": "Получает/создает вложенную таблицу по имени поля.",
+      "method_realization": "luaL_getsubtable(L, idx, fname) -> int"
+    },
+    {
+      "method_name": "luaL_gsub",
+      "method_description": "Заменяет подстроки в строке и возвращает новую строку.",
+      "method_realization": "luaL_gsub(L, s, p, r) -> const char*"
+    },
+    {
+      "method_name": "luaL_len",
+      "method_description": "Безопасно вычисляет длину аргумента как integer.",
+      "method_realization": "luaL_len(L, idx) -> lua_Integer"
+    },
+    {
+      "method_name": "luaL_loadbuffer",
+      "method_description": "Загружает chunk из буфера.",
+      "method_realization": "luaL_loadbuffer(L, buff, sz, name) -> status"
+    },
+    {
+      "method_name": "luaL_loadbufferx",
+      "method_description": "Загружает chunk из буфера с mode.",
+      "method_realization": "luaL_loadbufferx(L, buff, sz, name, mode) -> status"
+    },
+    {
+      "method_name": "luaL_loadfile",
+      "method_description": "Загружает chunk из файла.",
+      "method_realization": "luaL_loadfile(L, filename) -> status"
+    },
+    {
+      "method_name": "luaL_loadfilex",
+      "method_description": "Загружает chunk из файла с mode.",
+      "method_realization": "luaL_loadfilex(L, filename, mode) -> status"
+    },
+    {
+      "method_name": "luaL_loadstring",
+      "method_description": "Загружает chunk из строки.",
+      "method_realization": "luaL_loadstring(L, s) -> status"
+    },
+    {
+      "method_name": "luaL_makeseed",
+      "method_description": "Возвращает seed для ГПСЧ.",
+      "method_realization": "luaL_makeseed(L) -> unsigned int"
+    },
+    {
+      "method_name": "luaL_newlib",
+      "method_description": "Создает новую библиотеку из массива luaL_Reg.",
+      "method_realization": "luaL_newlib(L, l)"
+    },
+    {
+      "method_name": "luaL_newlibtable",
+      "method_description": "Создает таблицу под размер массива luaL_Reg.",
+      "method_realization": "luaL_newlibtable(L, l)"
+    },
+    {
+      "method_name": "luaL_newmetatable",
+      "method_description": "Создает именованную метатаблицу, если ее еще нет.",
+      "method_realization": "luaL_newmetatable(L, tname) -> int"
+    },
+    {
+      "method_name": "luaL_newstate",
+      "method_description": "Создает новое состояние с стандартным аллокатором.",
+      "method_realization": "luaL_newstate() -> lua_State*"
+    },
+    {
+      "method_name": "luaL_openlibs",
+      "method_description": "Открывает все стандартные библиотеки.",
+      "method_realization": "luaL_openlibs(L)"
+    },
+    {
+      "method_name": "luaL_openselectedlibs",
+      "method_description": "Открывает выбранные стандартные библиотеки и/или preload.",
+      "method_realization": "luaL_openselectedlibs(L, load, preload)"
+    },
+    {
+      "method_name": "luaL_opt",
+      "method_description": "Макрос получения опционального аргумента.",
+      "method_realization": "luaL_opt(L, f, arg, dflt)"
+    },
+    {
+      "method_name": "luaL_optinteger",
+      "method_description": "Опциональный integer аргумент.",
+      "method_realization": "luaL_optinteger(L, arg, dflt) -> lua_Integer"
+    },
+    {
+      "method_name": "luaL_optlstring",
+      "method_description": "Опциональный string аргумент.",
+      "method_realization": "luaL_optlstring(L, arg, dflt, len) -> const char*"
+    },
+    {
+      "method_name": "luaL_optnumber",
+      "method_description": "Опциональный number аргумент.",
+      "method_realization": "luaL_optnumber(L, arg, dflt) -> lua_Number"
+    },
+    {
+      "method_name": "luaL_optstring",
+      "method_description": "Опциональный string аргумент.",
+      "method_realization": "luaL_optstring(L, arg, dflt) -> const char*"
+    },
+    {
+      "method_name": "luaL_prepbuffer",
+      "method_description": "Готовит внутренний буфер по умолчанию.",
+      "method_realization": "luaL_prepbuffer(B) -> char*"
+    },
+    {
+      "method_name": "luaL_prepbuffsize",
+      "method_description": "Готовит буфер указанного размера.",
+      "method_realization": "luaL_prepbuffsize(B, sz) -> char*"
+    },
+    {
+      "method_name": "luaL_pushfail",
+      "method_description": "Кладет fail-значение на стек.",
+      "method_realization": "luaL_pushfail(L)"
+    },
+    {
+      "method_name": "luaL_pushresult",
+      "method_description": "Финализирует буфер и кладет строку на стек.",
+      "method_realization": "luaL_pushresult(B)"
+    },
+    {
+      "method_name": "luaL_pushresultsize",
+      "method_description": "Финализирует буфер с указанием длины и кладет строку на стек.",
+      "method_realization": "luaL_pushresultsize(B, sz)"
+    },
+    {
+      "method_name": "luaL_ref",
+      "method_description": "Создает ссылку на объект в таблице и возвращает integer ref.",
+      "method_realization": "luaL_ref(L, t) -> int"
+    },
+    {
+      "method_name": "luaL_requiref",
+      "method_description": "Гарантирует загрузку библиотеки require-подобным образом.",
+      "method_realization": "luaL_requiref(L, modname, openf, glb)"
+    },
+    {
+      "method_name": "luaL_setfuncs",
+      "method_description": "Регистрирует массив функций в таблице.",
+      "method_realization": "luaL_setfuncs(L, l, nup)"
+    },
+    {
+      "method_name": "luaL_setmetatable",
+      "method_description": "Назначает зарегистрированную метатаблицу объекту на вершине стека.",
+      "method_realization": "luaL_setmetatable(L, tname)"
+    },
+    {
+      "method_name": "luaL_testudata",
+      "method_description": "Проверяет userdata на заданную метатаблицу без ошибки.",
+      "method_realization": "luaL_testudata(L, arg, tname) -> void*"
+    },
+    {
+      "method_name": "luaL_tolstring",
+      "method_description": "Преобразует значение к строке для диагностики.",
+      "method_realization": "luaL_tolstring(L, idx, len) -> const char*"
+    },
+    {
+      "method_name": "luaL_traceback",
+      "method_description": "Строит traceback между состояниями.",
+      "method_realization": "luaL_traceback(L, L1, msg, level)"
+    },
+    {
+      "method_name": "luaL_typeerror",
+      "method_description": "Генерирует ошибку типа для аргумента.",
+      "method_realization": "luaL_typeerror(L, arg, tname)"
+    },
+    {
+      "method_name": "luaL_typename",
+      "method_description": "Возвращает имя типа значения.",
+      "method_realization": "luaL_typename(L, idx) -> const char*"
+    },
+    {
+      "method_name": "luaL_unref",
+      "method_description": "Освобождает ссылку, полученную через luaL_ref.",
+      "method_realization": "luaL_unref(L, t, ref)"
+    },
+    {
+      "method_name": "luaL_where",
+      "method_description": "Добавляет в стек информацию о позиции ошибки.",
+      "method_realization": "luaL_where(L, lvl)"
+    },
+    {
+      "method_name": "LUAL_BUFFERSIZE",
+      "method_description": "Размер внутреннего буфера auxiliary library.",
+      "method_realization": "constant: LUAL_BUFFERSIZE"
+    },
+    {
+      "method_name": "LUA_ERRERR",
+      "method_description": "Код ошибки: ошибка в message handler.",
+      "method_realization": "constant: LUA_ERRERR"
+    },
+    {
+      "method_name": "LUA_ERRFILE",
+      "method_description": "Код ошибки auxiliary library при файловой ошибке.",
+      "method_realization": "constant: LUA_ERRFILE"
+    },
+    {
+      "method_name": "LUA_ERRMEM",
+      "method_description": "Код ошибки нехватки памяти.",
+      "method_realization": "constant: LUA_ERRMEM"
+    },
+    {
+      "method_name": "LUA_ERRRUN",
+      "method_description": "Код ошибки выполнения.",
+      "method_realization": "constant: LUA_ERRRUN"
+    },
+    {
+      "method_name": "LUA_ERRSYNTAX",
+      "method_description": "Код синтаксической ошибки.",
+      "method_realization": "constant: LUA_ERRSYNTAX"
+    },
+    {
+      "method_name": "LUA_GCCOLLECT",
+      "method_description": "Операция lua_gc: полный цикл GC.",
+      "method_realization": "constant: LUA_GCCOLLECT"
+    },
+    {
+      "method_name": "LUA_GCCOUNT",
+      "method_description": "Операция lua_gc: память в Kbytes.",
+      "method_realization": "constant: LUA_GCCOUNT"
+    },
+    {
+      "method_name": "LUA_GCCOUNTB",
+      "method_description": "Операция lua_gc: байтовая часть памяти.",
+      "method_realization": "constant: LUA_GCCOUNTB"
+    },
+    {
+      "method_name": "LUA_GCGEN",
+      "method_description": "Операция lua_gc: generational mode.",
+      "method_realization": "constant: LUA_GCGEN"
+    },
+    {
+      "method_name": "LUA_GCINC",
+      "method_description": "Операция lua_gc: incremental mode.",
+      "method_realization": "constant: LUA_GCINC"
+    },
+    {
+      "method_name": "LUA_GCISRUNNING",
+      "method_description": "Операция lua_gc: работает ли GC.",
+      "method_realization": "constant: LUA_GCISRUNNING"
+    },
+    {
+      "method_name": "LUA_GCPARAM",
+      "method_description": "Операция lua_gc: чтение/запись параметров GC.",
+      "method_realization": "constant: LUA_GCPARAM"
+    },
+    {
+      "method_name": "LUA_GCPMAJORMINOR",
+      "method_description": "Параметр GC: major-minor multiplier.",
+      "method_realization": "constant: LUA_GCPMAJORMINOR"
+    },
+    {
+      "method_name": "LUA_GCPMINORMAJOR",
+      "method_description": "Параметр GC: minor-major multiplier.",
+      "method_realization": "constant: LUA_GCPMINORMAJOR"
+    },
+    {
+      "method_name": "LUA_GCPMINORMUL",
+      "method_description": "Параметр GC: minor multiplier.",
+      "method_realization": "constant: LUA_GCPMINORMUL"
+    },
+    {
+      "method_name": "LUA_GCPPAUSE",
+      "method_description": "Параметр GC: pause.",
+      "method_realization": "constant: LUA_GCPPAUSE"
+    },
+    {
+      "method_name": "LUA_GCPSTEPMUL",
+      "method_description": "Параметр GC: step multiplier.",
+      "method_realization": "constant: LUA_GCPSTEPMUL"
+    },
+    {
+      "method_name": "LUA_GCPSTEPSIZE",
+      "method_description": "Параметр GC: step size.",
+      "method_realization": "constant: LUA_GCPSTEPSIZE"
+    },
+    {
+      "method_name": "LUA_GCRESTART",
+      "method_description": "Операция lua_gc: restart GC.",
+      "method_realization": "constant: LUA_GCRESTART"
+    },
+    {
+      "method_name": "LUA_GCSTEP",
+      "method_description": "Операция lua_gc: выполнить шаг.",
+      "method_realization": "constant: LUA_GCSTEP"
+    },
+    {
+      "method_name": "LUA_GCSTOP",
+      "method_description": "Операция lua_gc: остановить GC.",
+      "method_realization": "constant: LUA_GCSTOP"
+    },
+    {
+      "method_name": "LUA_HOOKCALL",
+      "method_description": "Флаг/событие hook вызова функции.",
+      "method_realization": "constant: LUA_HOOKCALL"
+    },
+    {
+      "method_name": "LUA_HOOKCOUNT",
+      "method_description": "Флаг/событие count hook.",
+      "method_realization": "constant: LUA_HOOKCOUNT"
+    },
+    {
+      "method_name": "LUA_HOOKLINE",
+      "method_description": "Флаг/событие hook новой строки.",
+      "method_realization": "constant: LUA_HOOKLINE"
+    },
+    {
+      "method_name": "LUA_HOOKRET",
+      "method_description": "Флаг/событие hook возврата.",
+      "method_realization": "constant: LUA_HOOKRET"
+    },
+    {
+      "method_name": "LUA_HOOKTAILCALL",
+      "method_description": "Флаг/событие hook tail call.",
+      "method_realization": "constant: LUA_HOOKTAILCALL"
+    },
+    {
+      "method_name": "LUA_LOADED_TABLE",
+      "method_description": "Имя registry-таблицы загруженных модулей.",
+      "method_realization": "constant: LUA_LOADED_TABLE"
+    },
+    {
+      "method_name": "LUA_MASKCALL",
+      "method_description": "Битовая маска hook на вызов.",
+      "method_realization": "constant: LUA_MASKCALL"
+    },
+    {
+      "method_name": "LUA_MASKCOUNT",
+      "method_description": "Битовая маска count hook.",
+      "method_realization": "constant: LUA_MASKCOUNT"
+    },
+    {
+      "method_name": "LUA_MASKLINE",
+      "method_description": "Битовая маска line hook.",
+      "method_realization": "constant: LUA_MASKLINE"
+    },
+    {
+      "method_name": "LUA_MASKRET",
+      "method_description": "Битовая маска return hook.",
+      "method_realization": "constant: LUA_MASKRET"
+    },
+    {
+      "method_name": "LUA_MAXINTEGER",
+      "method_description": "Максимум lua_Integer.",
+      "method_realization": "constant: LUA_MAXINTEGER"
+    },
+    {
+      "method_name": "LUA_MININTEGER",
+      "method_description": "Минимум lua_Integer.",
+      "method_realization": "constant: LUA_MININTEGER"
+    },
+    {
+      "method_name": "LUA_MINSTACK",
+      "method_description": "Минимально гарантированный размер стека для C-функции.",
+      "method_realization": "constant: LUA_MINSTACK"
+    },
+    {
+      "method_name": "LUA_MULTRET",
+      "method_description": "Спецзначение для возврата всех результатов вызова.",
+      "method_realization": "constant: LUA_MULTRET"
+    },
+    {
+      "method_name": "LUA_N2SBUFFSZ",
+      "method_description": "Рекомендуемый размер буфера для number-to-string.",
+      "method_realization": "constant: LUA_N2SBUFFSZ"
+    },
+    {
+      "method_name": "LUA_NOREF",
+      "method_description": "Недействительная ссылка luaL_ref.",
+      "method_realization": "constant: LUA_NOREF"
+    },
+    {
+      "method_name": "LUA_OK",
+      "method_description": "Код успеха.",
+      "method_realization": "constant: LUA_OK"
+    },
+    {
+      "method_name": "LUA_OPADD",
+      "method_description": "Код операции сложения для lua_arith.",
+      "method_realization": "constant: LUA_OPADD"
+    },
+    {
+      "method_name": "LUA_OPBAND",
+      "method_description": "Код побитового AND для lua_arith.",
+      "method_realization": "constant: LUA_OPBAND"
+    },
+    {
+      "method_name": "LUA_OPBNOT",
+      "method_description": "Код побитового NOT для lua_arith.",
+      "method_realization": "constant: LUA_OPBNOT"
+    },
+    {
+      "method_name": "LUA_OPBOR",
+      "method_description": "Код побитового OR для lua_arith.",
+      "method_realization": "constant: LUA_OPBOR"
+    },
+    {
+      "method_name": "LUA_OPBXOR",
+      "method_description": "Код побитового XOR для lua_arith.",
+      "method_realization": "constant: LUA_OPBXOR"
+    },
+    {
+      "method_name": "LUA_OPDIV",
+      "method_description": "Код деления для lua_arith.",
+      "method_realization": "constant: LUA_OPDIV"
+    },
+    {
+      "method_name": "LUA_OPEQ",
+      "method_description": "Код сравнения равенства для lua_compare.",
+      "method_realization": "constant: LUA_OPEQ"
+    },
+    {
+      "method_name": "LUA_OPIDIV",
+      "method_description": "Код целочисленного деления для lua_arith.",
+      "method_realization": "constant: LUA_OPIDIV"
+    },
+    {
+      "method_name": "LUA_OPLE",
+      "method_description": "Код сравнения <= для lua_compare.",
+      "method_realization": "constant: LUA_OPLE"
+    },
+    {
+      "method_name": "LUA_OPLT",
+      "method_description": "Код сравнения < для lua_compare.",
+      "method_realization": "constant: LUA_OPLT"
+    },
+    {
+      "method_name": "LUA_OPMOD",
+      "method_description": "Код остатка для lua_arith.",
+      "method_realization": "constant: LUA_OPMOD"
+    },
+    {
+      "method_name": "LUA_OPMUL",
+      "method_description": "Код умножения для lua_arith.",
+      "method_realization": "constant: LUA_OPMUL"
+    },
+    {
+      "method_name": "LUA_OPPOW",
+      "method_description": "Код степени для lua_arith.",
+      "method_realization": "constant: LUA_OPPOW"
+    },
+    {
+      "method_name": "LUA_OPSHL",
+      "method_description": "Код сдвига влево для lua_arith.",
+      "method_realization": "constant: LUA_OPSHL"
+    },
+    {
+      "method_name": "LUA_OPSHR",
+      "method_description": "Код сдвига вправо для lua_arith.",
+      "method_realization": "constant: LUA_OPSHR"
+    },
+    {
+      "method_name": "LUA_OPSUB",
+      "method_description": "Код вычитания для lua_arith.",
+      "method_realization": "constant: LUA_OPSUB"
+    },
+    {
+      "method_name": "LUA_OPUNM",
+      "method_description": "Код унарного минуса для lua_arith.",
+      "method_realization": "constant: LUA_OPUNM"
+    },
+    {
+      "method_name": "LUA_PRELOAD_TABLE",
+      "method_description": "Имя registry-таблицы preload модулей.",
+      "method_realization": "constant: LUA_PRELOAD_TABLE"
+    },
+    {
+      "method_name": "LUA_REFNIL",
+      "method_description": "Специальная ссылка на nil.",
+      "method_realization": "constant: LUA_REFNIL"
+    },
+    {
+      "method_name": "LUA_REGISTRYINDEX",
+      "method_description": "Специальный индекс registry.",
+      "method_realization": "constant: LUA_REGISTRYINDEX"
+    },
+    {
+      "method_name": "LUA_RIDX_GLOBALS",
+      "method_description": "Индекс registry для глобальной таблицы.",
+      "method_realization": "constant: LUA_RIDX_GLOBALS"
+    },
+    {
+      "method_name": "LUA_RIDX_MAINTHREAD",
+      "method_description": "Индекс registry для главного потока.",
+      "method_realization": "constant: LUA_RIDX_MAINTHREAD"
+    },
+    {
+      "method_name": "LUA_TBOOLEAN",
+      "method_description": "Код типа boolean.",
+      "method_realization": "constant: LUA_TBOOLEAN"
+    },
+    {
+      "method_name": "LUA_TFUNCTION",
+      "method_description": "Код типа function.",
+      "method_realization": "constant: LUA_TFUNCTION"
+    },
+    {
+      "method_name": "LUA_TLIGHTUSERDATA",
+      "method_description": "Код типа light userdata.",
+      "method_realization": "constant: LUA_TLIGHTUSERDATA"
+    },
+    {
+      "method_name": "LUA_TNIL",
+      "method_description": "Код типа nil.",
+      "method_realization": "constant: LUA_TNIL"
+    },
+    {
+      "method_name": "LUA_TNONE",
+      "method_description": "Код отсутствующего значения.",
+      "method_realization": "constant: LUA_TNONE"
+    },
+    {
+      "method_name": "LUA_TNUMBER",
+      "method_description": "Код типа number.",
+      "method_realization": "constant: LUA_TNUMBER"
+    },
+    {
+      "method_name": "LUA_TSTRING",
+      "method_description": "Код типа string.",
+      "method_realization": "constant: LUA_TSTRING"
+    },
+    {
+      "method_name": "LUA_TTABLE",
+      "method_description": "Код типа table.",
+      "method_realization": "constant: LUA_TTABLE"
+    },
+    {
+      "method_name": "LUA_TTHREAD",
+      "method_description": "Код типа thread.",
+      "method_realization": "constant: LUA_TTHREAD"
+    },
+    {
+      "method_name": "LUA_TUSERDATA",
+      "method_description": "Код типа userdata.",
+      "method_realization": "constant: LUA_TUSERDATA"
+    },
+    {
+      "method_name": "LUA_USE_APICHECK",
+      "method_description": "Компиляционный флаг дополнительной проверки API.",
+      "method_realization": "constant/macro: LUA_USE_APICHECK"
+    },
+    {
+      "method_name": "LUA_YIELD",
+      "method_description": "Код статуса yield.",
+      "method_realization": "constant: LUA_YIELD"
+    },
+    {
+      "method_name": "LUA_COLIBK",
+      "method_description": "Бит маски библиотеки coroutine.",
+      "method_realization": "constant: LUA_COLIBK"
+    },
+    {
+      "method_name": "LUA_DBLIBK",
+      "method_description": "Бит маски библиотеки debug.",
+      "method_realization": "constant: LUA_DBLIBK"
+    },
+    {
+      "method_name": "LUA_GLIBK",
+      "method_description": "Бит маски basic library.",
+      "method_realization": "constant: LUA_GLIBK"
+    },
+    {
+      "method_name": "LUA_IOLIBK",
+      "method_description": "Бит маски io library.",
+      "method_realization": "constant: LUA_IOLIBK"
+    },
+    {
+      "method_name": "LUA_LOADLIBK",
+      "method_description": "Бит маски package library.",
+      "method_realization": "constant: LUA_LOADLIBK"
+    },
+    {
+      "method_name": "LUA_MATHLIBK",
+      "method_description": "Бит маски math library.",
+      "method_realization": "constant: LUA_MATHLIBK"
+    },
+    {
+      "method_name": "LUA_OSLIBK",
+      "method_description": "Бит маски os library.",
+      "method_realization": "constant: LUA_OSLIBK"
+    },
+    {
+      "method_name": "LUA_STRLIBK",
+      "method_description": "Бит маски string library.",
+      "method_realization": "constant: LUA_STRLIBK"
+    },
+    {
+      "method_name": "LUA_TABLIBK",
+      "method_description": "Бит маски table library.",
+      "method_realization": "constant: LUA_TABLIBK"
+    },
+    {
+      "method_name": "LUA_UTF8LIBK",
+      "method_description": "Бит маски utf8 library.",
+      "method_realization": "constant: LUA_UTF8LIBK"
+    },
+    {
+      "method_name": "LUA_COLIBNAME",
+      "method_description": "Имя библиотеки coroutine.",
+      "method_realization": "constant: LUA_COLIBNAME"
+    },
+    {
+      "method_name": "LUA_DBLIBNAME",
+      "method_description": "Имя библиотеки debug.",
+      "method_realization": "constant: LUA_DBLIBNAME"
+    },
+    {
+      "method_name": "LUA_IOLIBNAME",
+      "method_description": "Имя библиотеки io.",
+      "method_realization": "constant: LUA_IOLIBNAME"
+    },
+    {
+      "method_name": "LUA_LOADLIBNAME",
+      "method_description": "Имя библиотеки package/loadlib.",
+      "method_realization": "constant: LUA_LOADLIBNAME"
+    },
+    {
+      "method_name": "LUA_MATHLIBNAME",
+      "method_description": "Имя библиотеки math.",
+      "method_realization": "constant: LUA_MATHLIBNAME"
+    },
+    {
+      "method_name": "LUA_OSLIBNAME",
+      "method_description": "Имя библиотеки os.",
+      "method_realization": "constant: LUA_OSLIBNAME"
+    },
+    {
+      "method_name": "LUA_STRLIBNAME",
+      "method_description": "Имя библиотеки string.",
+      "method_description": "Имя библиотеки string.",
+      "method_realization": "constant: LUA_STRLIBNAME"
+    },
+    {
+      "method_name": "LUA_TABLIBNAME",
+      "method_description": "Имя библиотеки table.",
+      "method_realization": "constant: LUA_TABLIBNAME"
+    },
+    {
+      "method_name": "LUA_UTF8LIBNAME",
+      "method_description": "Имя библиотеки utf8.",
+      "method_realization": "constant: LUA_UTF8LIBNAME"
+    }
+]
